@@ -8,15 +8,16 @@ SOURCES += \
         fechahora.cpp \
         fotos.cpp \
         gestorarchivos.cpp \
-        listadinamica.cpp \
         main.cpp \
         medidorrecursos.cpp \
         mensajes.cpp \
         redamistades.cpp \
         redsocial.cpp \
-        usuario.cpp
+        usuario.cpp \
+        utilidades.cpp
 
 HEADERS += \
+    Configuracion.h \
     albumfotos.h \
     fechahora.h \
     fotos.h \
@@ -26,4 +27,5 @@ HEADERS += \
     mensajes.h \
     redamistades.h \
     redsocial.h \
-    usuario.h
+    usuario.h \
+    utilidades.h
