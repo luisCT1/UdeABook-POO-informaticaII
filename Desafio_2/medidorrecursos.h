@@ -6,7 +6,6 @@
 class MedidorRecursos {
 private:
     static MedidorRecursos * activo;
-
     unsigned short funcionalidadActual;
     unsigned long long iterFuncionalidad, refFuncionalidad, extFuncionalidad;
     unsigned long memoriaLocal;
