@@ -1,6 +1,9 @@
 #ifndef LISTADINAMICA_H
 #define LISTADINAMICA_H
 
+#include "utilidades.h"
+#include "MedidorRecursos.h"
+
 //arreglo que crece solo. guarda punteros, pero no borra los objetos
 
 template <class T>

@@ -110,6 +110,11 @@ void MedidorRecursos::sumarReferencia(unsigned long long n) {
     }
 }
 
+void MedidorRecursos::sumarComun(unsigned long long n) {
+    sumarIteraciones(n);
+    sumarReferencia(n);
+}
+
 void MedidorRecursos::sumarUsoExterno(unsigned long long n) {
     MedidorRecursos & m = obtener();
     m.extFuncionalidad += n;

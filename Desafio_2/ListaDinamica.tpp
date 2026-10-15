@@ -1,5 +1,3 @@
-#include <new>
-
 //la plantilla va en este archivo porque si se deja en un .cpp las otras clases no la ven
 
 template <class T>
@@ -13,7 +11,7 @@ ListaDinamica<T>::ListaDinamica(unsigned int capacidadInicial)
     if (capacidadInicial == 0) {
         return;
     }
-    elementos = new (std::nothrow) T[capacidadInicial];
+    elementos = reservar<T>(capacidadInicial);
     if (elementos == nullptr) {
         valida = false;
         return;
@@ -27,12 +25,13 @@ ListaDinamica<T>::ListaDinamica(const ListaDinamica & otra)
     if (otra.capacidad == 0) {
         return;
     }
-    elementos = new (std::nothrow) T[otra.capacidad];
+    elementos = reservar<T>(otra.capacidad);
     if (elementos == nullptr) {
         valida = false;
         return;
     }
     for (unsigned int i = 0; i < otra.tamanio; i++) {
+        MedidorRecursos::sumarComun();
         elementos[i] = otra.elementos[i];
     }
     tamanio = otra.tamanio;
@@ -70,12 +69,13 @@ bool ListaDinamica<T>::asegurarCapacidad(unsigned int minima) {
     if (minima <= capacidad) {
         return true;
     }
-    T * nuevo = new (std::nothrow) T[minima];
+    T * nuevo = reservar<T>(minima);
     if (nuevo == nullptr) {
         valida = false;
         return false;
     }
     for (unsigned int i = 0; i < tamanio; i++) {
+        MedidorRecursos::sumarIteraciones();
         nuevo[i] = elementos[i];
     }
     delete[] elementos;
@@ -95,6 +95,8 @@ bool ListaDinamica<T>::ampliar() {
 
 template <class T>
 bool ListaDinamica<T>::agregar(const T & elemento) {
+    //crecer de uno en uno copiaria todos los elementos en cada agregar
+    MedidorRecursos::sumarReferencia(tamanio);
     if (tamanio == capacidad) {
         if (!ampliar()) {
             return false;
@@ -122,12 +124,13 @@ ListaDinamica<T> & ListaDinamica<T>::operator=(const ListaDinamica & otra) {
     }
     T * nuevo = nullptr;
     if (otra.capacidad > 0) {
-        nuevo = new (std::nothrow) T[otra.capacidad];
+        nuevo = reservar<T>(otra.capacidad);
         if (nuevo == nullptr) {
             valida = false;
             return *this;
         }
         for (unsigned int i = 0; i < otra.tamanio; i++) {
+            MedidorRecursos::sumarComun();
             nuevo[i] = otra.elementos[i];
         }
     }

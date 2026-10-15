@@ -2,11 +2,12 @@
 #include "AlbumFotos.h"
 #include "Mensaje.h"
 #include "utilidades.h"
+#include "MedidorRecursos.h"
 
 namespace {
 
 bool ponerTexto(char * & destino, const char * origen) {
-    char * copia = util::duplicar(origen == nullptr ? "" : origen);
+    char * copia = copiar(origen == nullptr ? "" : origen);
     if (copia == nullptr) {
         return false;
     }
@@ -34,8 +35,8 @@ Usuario::Usuario(const char * nombreUsuario, const char * contrasena,
     : nombreUsuario(nullptr), fechaNacimiento(fechaNacimiento), correo(nullptr), contrasena(nullptr),
       ciudad(nullptr), pais(nullptr), fechaInscripcion(fechaInscripcion),
       indice(indice), primerNoLeido(0), valido(true) {
-    this->nombreUsuario = util::duplicar(nombreUsuario == nullptr ? "" : nombreUsuario);
-    this->contrasena = util::duplicar(contrasena == nullptr ? "" : contrasena);
+    this->nombreUsuario = copiar(nombreUsuario == nullptr ? "" : nombreUsuario);
+    this->contrasena = copiar(contrasena == nullptr ? "" : contrasena);
     if (this->nombreUsuario == nullptr || this->contrasena == nullptr || this->nombreUsuario[0] == '\0') {
         valido = false;
     }
@@ -43,9 +44,11 @@ Usuario::Usuario(const char * nombreUsuario, const char * contrasena,
 
 Usuario::~Usuario() {
     for (unsigned int i = 0; i < albumes.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         delete albumes[i];
     }
     for (unsigned int i = 0; i < mensajesRecibidos.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         delete mensajesRecibidos[i];
     }
     delete[] nombreUsuario;
@@ -76,7 +79,7 @@ bool Usuario::setPais(const char * valor) { return ponerTexto(pais, valor); }
 void Usuario::setPrimerNoLeido(unsigned int posicion) { primerNoLeido = posicion; }
 
 bool Usuario::verificarContrasena(const char * intento) const {
-    return util::iguales(contrasena, intento);
+    return iguales(contrasena, intento);
 }
 
 bool Usuario::agregarAlbum(AlbumFotos * album) {
@@ -92,7 +95,8 @@ unsigned int Usuario::getNumAlbumes() const {
 
 AlbumFotos * Usuario::buscarAlbum(const char * nombre) const {
     for (unsigned int i = 0; i < albumes.getTamanio(); i++) {
-        if (albumes[i] != nullptr && util::iguales(albumes[i]->getNombre(), nombre)) {
+        MedidorRecursos::sumarIteraciones();
+        if (albumes[i] != nullptr && iguales(albumes[i]->getNombre(), nombre)) {
             return albumes[i];
         }
     }
@@ -131,6 +135,7 @@ unsigned int Usuario::contarNoLeidos() const {
 unsigned int Usuario::marcarTodosLeidos() {
     unsigned int n = mensajesRecibidos.getTamanio();
     for (unsigned int i = primerNoLeido; i < n; i++) {
+        MedidorRecursos::sumarIteraciones();
         if (mensajesRecibidos[i] != nullptr) {
             mensajesRecibidos[i]->setLeido(true);
         }
@@ -142,9 +147,12 @@ unsigned int Usuario::marcarTodosLeidos() {
 bool Usuario::buscarRangoMensajes(const FechaHora & inicio, const FechaHora & fin,
                                   unsigned int & desde, unsigned int & hasta) const {
     unsigned int n = mensajesRecibidos.getTamanio();
+    //la alternativa ingenua recorreria toda la bandeja
+    MedidorRecursos::sumarReferencia(n);
     unsigned int lo = 0;
     unsigned int hi = n;
     while (lo < hi) {
+        MedidorRecursos::sumarIteraciones();
         unsigned int medio = lo + (hi - lo) / 2;
         Mensaje * m = mensajesRecibidos[medio];
         if (m != nullptr && compararDia(m->getFechaEnvio(), inicio) < 0) {
@@ -157,6 +165,7 @@ bool Usuario::buscarRangoMensajes(const FechaHora & inicio, const FechaHora & fi
     lo = 0;
     hi = n;
     while (lo < hi) {
+        MedidorRecursos::sumarIteraciones();
         unsigned int medio = lo + (hi - lo) / 2;
         Mensaje * m = mensajesRecibidos[medio];
         if (m != nullptr && compararDia(m->getFechaEnvio(), fin) <= 0) {
@@ -170,11 +179,11 @@ bool Usuario::buscarRangoMensajes(const FechaHora & inicio, const FechaHora & fi
 }
 
 bool Usuario::operator<(const Usuario & otro) const {
-    return util::comparar(nombreUsuario, otro.nombreUsuario) < 0;
+    return comparar(nombreUsuario, otro.nombreUsuario) < 0;
 }
 
 bool Usuario::operator==(const Usuario & otro) const {
-    return util::iguales(nombreUsuario, otro.nombreUsuario);
+    return iguales(nombreUsuario, otro.nombreUsuario);
 }
 
 unsigned long Usuario::calcularMemoria() const {
@@ -182,17 +191,19 @@ unsigned long Usuario::calcularMemoria() const {
     total += albumes.calcularMemoria();
     total += mensajesRecibidos.calcularMemoria();
     total += mensajesEnviados.calcularMemoria();
-    if (nombreUsuario != nullptr) total += util::longitud(nombreUsuario) + 1;
-    if (correo != nullptr) total += util::longitud(correo) + 1;
-    if (contrasena != nullptr) total += util::longitud(contrasena) + 1;
-    if (ciudad != nullptr) total += util::longitud(ciudad) + 1;
-    if (pais != nullptr) total += util::longitud(pais) + 1;
+    if (nombreUsuario != nullptr) total += longitud(nombreUsuario) + 1;
+    if (correo != nullptr) total += longitud(correo) + 1;
+    if (contrasena != nullptr) total += longitud(contrasena) + 1;
+    if (ciudad != nullptr) total += longitud(ciudad) + 1;
+    if (pais != nullptr) total += longitud(pais) + 1;
     for (unsigned int i = 0; i < albumes.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         if (albumes[i] != nullptr) {
             total += albumes[i]->calcularMemoria();
         }
     }
     for (unsigned int i = 0; i < mensajesRecibidos.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         if (mensajesRecibidos[i] != nullptr) {
             total += mensajesRecibidos[i]->calcularMemoria();
         }

@@ -6,7 +6,6 @@
 class MedidorRecursos {
 private:
     static MedidorRecursos * activo;
-
     unsigned short funcionalidadActual;
     unsigned long long iterFuncionalidad, refFuncionalidad, extFuncionalidad;
     unsigned long memoriaLocal;
@@ -27,6 +26,8 @@ public:
 
     static void sumarIteraciones(unsigned long long n = 1);
     static void sumarReferencia(unsigned long long n);
+    //lo que las dos versiones hacen igual, por ejemplo copiar un texto
+    static void sumarComun(unsigned long long n = 1);
     static void sumarUsoExterno(unsigned long long n = 1);
     static void sumarMemoriaLocal(unsigned long bytes);
 

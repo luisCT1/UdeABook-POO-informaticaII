@@ -38,13 +38,6 @@ bool numerosValidos(short anio, short mes, short dia, short hora, short minuto, 
     return true;
 }
 
-void ponerDigitos(char * destino, int valor, int cantidad) {
-    for (int i = cantidad - 1; i >= 0; i--) {
-        destino[i] = (char)('0' + (valor % 10));
-        valor /= 10;
-    }
-}
-
 }
 
 FechaHora::FechaHora()
@@ -136,41 +129,45 @@ void FechaHora::aTexto14(char * destino) const {
     if (destino == nullptr) {
         return;
     }
-    ponerDigitos(destino, anio, 4);
-    ponerDigitos(destino + 4, mes, 2);
-    ponerDigitos(destino + 6, dia, 2);
-    ponerDigitos(destino + 8, hora, 2);
-    ponerDigitos(destino + 10, minuto, 2);
-    ponerDigitos(destino + 12, segundo, 2);
+    escribirNumero(anio, 4, destino);
+    escribirNumero(mes, 2, destino + 4);
+    escribirNumero(dia, 2, destino + 6);
+    escribirNumero(hora, 2, destino + 8);
+    escribirNumero(minuto, 2, destino + 10);
+    escribirNumero(segundo, 2, destino + 12);
     destino[14] = '\0';
 }
 
 bool FechaHora::desdeTexto14(const char * texto) {
-    if (!util::soloDigitos(texto, 14)) {
+    if (texto == nullptr || longitud(texto) != 14) {
         return false;
     }
-    short a = (short)((texto[0] - '0') * 1000 + (texto[1] - '0') * 100 + (texto[2] - '0') * 10 + (texto[3] - '0'));
-    short m = (short)((texto[4] - '0') * 10 + (texto[5] - '0'));
-    short d = (short)((texto[6] - '0') * 10 + (texto[7] - '0'));
-    short h = (short)((texto[8] - '0') * 10 + (texto[9] - '0'));
-    short mi = (short)((texto[10] - '0') * 10 + (texto[11] - '0'));
-    short s = (short)((texto[12] - '0') * 10 + (texto[13] - '0'));
-    return setFechaHora(a, m, d, h, mi, s);
+    unsigned long long a = 0;
+    unsigned long long m = 0;
+    unsigned long long d = 0;
+    unsigned long long h = 0;
+    unsigned long long mi = 0;
+    unsigned long long s = 0;
+    if (!aNumero(texto, 0, 4, a) || !aNumero(texto, 4, 6, m) || !aNumero(texto, 6, 8, d)
+        || !aNumero(texto, 8, 10, h) || !aNumero(texto, 10, 12, mi) || !aNumero(texto, 12, 14, s)) {
+        return false;
+    }
+    return setFechaHora((short)a, (short)m, (short)d, (short)h, (short)mi, (short)s);
 }
 
 std::ostream & operator<<(std::ostream & salida, const FechaHora & fecha) {
     char texto[20];
-    ponerDigitos(texto, fecha.anio, 4);
+    escribirNumero(fecha.anio, 4, texto);
     texto[4] = '-';
-    ponerDigitos(texto + 5, fecha.mes, 2);
+    escribirNumero(fecha.mes, 2, texto + 5);
     texto[7] = '-';
-    ponerDigitos(texto + 8, fecha.dia, 2);
+    escribirNumero(fecha.dia, 2, texto + 8);
     texto[10] = ' ';
-    ponerDigitos(texto + 11, fecha.hora, 2);
+    escribirNumero(fecha.hora, 2, texto + 11);
     texto[13] = ':';
-    ponerDigitos(texto + 14, fecha.minuto, 2);
+    escribirNumero(fecha.minuto, 2, texto + 14);
     texto[16] = ':';
-    ponerDigitos(texto + 17, fecha.segundo, 2);
+    escribirNumero(fecha.segundo, 2, texto + 17);
     texto[19] = '\0';
     salida << texto;
     return salida;

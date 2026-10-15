@@ -43,6 +43,10 @@ build/
 Build/
 build-*/
 
+# Qt Creator, solo en esta maquina
+*.pro.user
+.qtcreator/
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt

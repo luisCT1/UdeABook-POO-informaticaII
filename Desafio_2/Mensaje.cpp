@@ -9,7 +9,7 @@ Mensaje::Mensaje()
 Mensaje::Mensaje(Usuario * emisor, Usuario * receptor, const char * texto, const FechaHora & fechaEnvio)
     : texto(nullptr), fechaEnvio(fechaEnvio), leido(false),
       emisor(emisor), receptor(receptor), valido(true) {
-    this->texto = util::duplicar(texto == nullptr ? "" : texto);
+    this->texto = copiar(texto == nullptr ? "" : texto);
     if (this->texto == nullptr || !textoValido(this->texto)) {
         valido = false;
     }
@@ -18,7 +18,7 @@ Mensaje::Mensaje(Usuario * emisor, Usuario * receptor, const char * texto, const
 Mensaje::Mensaje(const Mensaje & otra)
     : texto(nullptr), fechaEnvio(otra.fechaEnvio), leido(otra.leido),
       emisor(otra.emisor), receptor(otra.receptor), valido(otra.valido) {
-    texto = util::duplicar(otra.texto == nullptr ? "" : otra.texto);
+    texto = copiar(otra.texto == nullptr ? "" : otra.texto);
     if (texto == nullptr) {
         valido = false;
     }
@@ -35,7 +35,7 @@ bool Mensaje::textoValido(const char * texto) {
         return false;
     }
     //una enie o una tilde ocupan 2 bytes, por eso el tope es en bytes y no en letras
-    return util::longitud(texto) <= cfg::MAX_BYTES_MENSAJE;
+    return longitud(texto) <= MAX_BYTES_MENSAJE;
 }
 
 const char * Mensaje::getTexto() const { return texto; }
@@ -53,7 +53,7 @@ Mensaje & Mensaje::operator=(const Mensaje & otro) {
     if (this == &otro) {
         return *this;
     }
-    char * copia = util::duplicar(otro.texto == nullptr ? "" : otro.texto);
+    char * copia = copiar(otro.texto == nullptr ? "" : otro.texto);
     if (copia == nullptr) {
         valido = false;
         return *this;
@@ -71,7 +71,7 @@ Mensaje & Mensaje::operator=(const Mensaje & otro) {
 unsigned long Mensaje::calcularMemoria() const {
     unsigned long extra = 0;
     if (texto != nullptr) {
-        extra = util::longitud(texto) + 1;
+        extra = longitud(texto) + 1;
     }
     return sizeof(*this) + extra;
 }

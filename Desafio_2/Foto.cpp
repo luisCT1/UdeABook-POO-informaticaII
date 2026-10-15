@@ -11,7 +11,7 @@ Foto::Foto(unsigned int id, const FechaHora & fechaCaptura, unsigned int tamanio
            const char * nombreArchivo, unsigned int likes)
     : id(id), fechaCaptura(fechaCaptura), tamanio(tamanio),
       nombreArchivo(nullptr), likes(likes), valido(true) {
-    this->nombreArchivo = util::duplicar(nombreArchivo == nullptr ? "" : nombreArchivo);
+    this->nombreArchivo = copiar(nombreArchivo == nullptr ? "" : nombreArchivo);
     if (this->nombreArchivo == nullptr) {
         valido = false;
     }
@@ -20,7 +20,7 @@ Foto::Foto(unsigned int id, const FechaHora & fechaCaptura, unsigned int tamanio
 Foto::Foto(const Foto & otra)
     : id(otra.id), fechaCaptura(otra.fechaCaptura), tamanio(otra.tamanio),
       nombreArchivo(nullptr), likes(otra.likes), valido(otra.valido) {
-    nombreArchivo = util::duplicar(otra.nombreArchivo == nullptr ? "" : otra.nombreArchivo);
+    nombreArchivo = copiar(otra.nombreArchivo == nullptr ? "" : otra.nombreArchivo);
     if (nombreArchivo == nullptr) {
         valido = false;
     }
@@ -42,7 +42,7 @@ void Foto::setFechaCaptura(const FechaHora & fecha) { fechaCaptura = fecha; }
 void Foto::setTamanio(unsigned int bytes) { tamanio = bytes; }
 
 bool Foto::setNombreArchivo(const char * nombre) {
-    char * copia = util::duplicar(nombre == nullptr ? "" : nombre);
+    char * copia = copiar(nombre == nullptr ? "" : nombre);
     if (copia == nullptr) {
         return false;
     }
@@ -70,7 +70,7 @@ Foto & Foto::operator=(const Foto & otra) {
     if (this == &otra) {
         return *this;
     }
-    char * copia = util::duplicar(otra.nombreArchivo == nullptr ? "" : otra.nombreArchivo);
+    char * copia = copiar(otra.nombreArchivo == nullptr ? "" : otra.nombreArchivo);
     if (copia == nullptr) {
         valido = false;
         return *this;
@@ -88,7 +88,7 @@ Foto & Foto::operator=(const Foto & otra) {
 unsigned long Foto::calcularMemoria() const {
     unsigned long extra = 0;
     if (nombreArchivo != nullptr) {
-        extra = util::longitud(nombreArchivo) + 1;
+        extra = longitud(nombreArchivo) + 1;
     }
     return sizeof(*this) + extra;
 }

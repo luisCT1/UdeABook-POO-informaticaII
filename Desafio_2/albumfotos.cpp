@@ -2,14 +2,15 @@
 #include "Foto.h"
 #include "configuracion.h"
 #include "utilidades.h"
+#include "MedidorRecursos.h"
 
 AlbumFotos::AlbumFotos()
-    : nombre(nullptr), privacidad(cfg::PRIVACIDAD_PUBLICA), valido(true) {
+    : nombre(nullptr), privacidad(PRIVACIDAD_PUBLICA), valido(true) {
 }
 
 AlbumFotos::AlbumFotos(const char * nombre, char privacidad)
-    : nombre(nullptr), privacidad(cfg::PRIVACIDAD_PUBLICA), valido(true) {
-    this->nombre = util::duplicar(nombre == nullptr ? "" : nombre);
+    : nombre(nullptr), privacidad(PRIVACIDAD_PUBLICA), valido(true) {
+    this->nombre = copiar(nombre == nullptr ? "" : nombre);
     if (this->nombre == nullptr) {
         valido = false;
     }
@@ -18,6 +19,7 @@ AlbumFotos::AlbumFotos(const char * nombre, char privacidad)
 
 AlbumFotos::~AlbumFotos() {
     for (unsigned int i = 0; i < fotos.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         delete fotos[i];
     }
     delete[] nombre;
@@ -29,7 +31,7 @@ char AlbumFotos::getPrivacidad() const { return privacidad; }
 unsigned int AlbumFotos::getNumFotos() const { return fotos.getTamanio(); }
 
 bool AlbumFotos::setNombre(const char * nombreNuevo) {
-    char * copia = util::duplicar(nombreNuevo == nullptr ? "" : nombreNuevo);
+    char * copia = copiar(nombreNuevo == nullptr ? "" : nombreNuevo);
     if (copia == nullptr) {
         return false;
     }
@@ -39,7 +41,7 @@ bool AlbumFotos::setNombre(const char * nombreNuevo) {
 }
 
 void AlbumFotos::setPrivacidad(char valor) {
-    if (valor == cfg::PRIVACIDAD_PUBLICA || valor == cfg::PRIVACIDAD_PRIVADA || valor == cfg::PRIVACIDAD_AMIGOS) {
+    if (valor == PRIVACIDAD_PUBLICA || valor == PRIVACIDAD_PRIVADA || valor == PRIVACIDAD_AMIGOS) {
         privacidad = valor;
     }
 }
@@ -74,13 +76,13 @@ Foto * AlbumFotos::getFotoCircular(int posicion) const {
 }
 
 bool AlbumFotos::puedeVer(bool esDueno, bool esAmigo) const {
-    if (privacidad == cfg::PRIVACIDAD_PUBLICA) {
+    if (privacidad == PRIVACIDAD_PUBLICA) {
         return true;
     }
-    if (privacidad == cfg::PRIVACIDAD_PRIVADA) {
+    if (privacidad == PRIVACIDAD_PRIVADA) {
         return esDueno;
     }
-    if (privacidad == cfg::PRIVACIDAD_AMIGOS) {
+    if (privacidad == PRIVACIDAD_AMIGOS) {
         return esDueno || esAmigo;
     }
     return false;
@@ -89,9 +91,10 @@ bool AlbumFotos::puedeVer(bool esDueno, bool esAmigo) const {
 unsigned long AlbumFotos::calcularMemoria() const {
     unsigned long total = sizeof(*this) + fotos.calcularMemoria();
     if (nombre != nullptr) {
-        total += util::longitud(nombre) + 1;
+        total += longitud(nombre) + 1;
     }
     for (unsigned int i = 0; i < fotos.getTamanio(); i++) {
+        MedidorRecursos::sumarIteraciones();
         if (fotos[i] != nullptr) {
             total += fotos[i]->calcularMemoria();
         }
