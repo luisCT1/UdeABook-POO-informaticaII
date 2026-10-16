@@ -25,6 +25,11 @@ void decir(unsigned short codigo) {
     std::cout << descripcionResultado(codigo) << "\n";
 }
 
+void pausar() {
+    char entra[8];
+    leerTexto("enter para seguir: ", entra, 8);
+}
+
 bool existeDataset(const char * carpeta) {
     char ruta[1024];
     unsigned int n = longitud(carpeta);
@@ -49,8 +54,9 @@ bool existeDataset(const char * carpeta) {
 
 void mostrarAmigosDestacados(RedSocial & red) {
     unsigned short n = red.getCantidadGrupo();
+    std::cout << "\nfotos de amigos:\n";
     if (n == 0) {
-        std::cout << "no hay fotos de amigos para mostrar\n";
+        std::cout << "  no hay amigos para mostrar\n";
         return;
     }
     for (unsigned short i = 0; i < n; i++) {
@@ -62,19 +68,22 @@ void mostrarAmigosDestacados(RedSocial & red) {
         if (!red.getGestor().armarRutaPerfil(*amigo, ruta, 256)) {
             copiarEn("?", ruta, 256);
         }
-        std::cout << (i + 1) << ". " << amigo->getNombreUsuario() << "  " << ruta << "\n";
+        std::cout << "  " << (i + 1) << ". " << amigo->getNombreUsuario() << "\n";
+        std::cout << "     " << ruta << "\n";
     }
+}
+
+void cerrarFuncionalidad(RedSocial & red) {
+    std::cout << "\n--- recursos usados ---\n";
+    red.mostrarReporte();
+    pausar();
 }
 
 }
 
 const char * seleccionarDataset() {
+    //busca sola la carpeta, sin preguntar nada raro al usuario
     static char ruta[512];
-    leerTexto("carpeta de datos (enter = datos/conjunto): ", ruta, 512);
-    if (ruta[0] != '\0') {
-        return ruta;
-    }
-    //qt deja el programa dentro de build, asi que se sube hasta encontrar datos
     char intento[512];
     copiarEn("datos/conjunto", intento, 512);
     for (int sube = 0; sube < 6; sube++) {
@@ -104,11 +113,19 @@ const char * seleccionarDataset() {
 }
 
 bool pantallaDeIngreso(RedSocial & red) {
+    std::cout << "\n";
+    std::cout << " ========================================\n";
+    std::cout << "\n";
+    std::cout << "              UdeABook\n";
+    std::cout << "\n";
+    std::cout << " ========================================\n";
+    std::cout << "         red social de la udea\n\n";
+
     red.iniciarMedicion(FUNC_INGRESO);
     while (true) {
         char nombre[64];
         char clave[64];
-        leerTexto("usuario (enter cancela): ", nombre, 64);
+        leerTexto("usuario: ", nombre, 64);
         if (nombre[0] == '\0') {
             red.mostrarReporte();
             return false;
@@ -117,7 +134,7 @@ bool pantallaDeIngreso(RedSocial & red) {
         unsigned short codigo = red.iniciarSesion(nombre, clave);
         if (codigo == RES_OK) {
             mostrarPantallaInicio(red);
-            red.mostrarReporte();
+            cerrarFuncionalidad(red);
             return true;
         }
         decir(codigo);
@@ -126,42 +143,57 @@ bool pantallaDeIngreso(RedSocial & red) {
 
 void mostrarPantallaInicio(RedSocial & red) {
     Usuario * activo = red.getUsuarioActivo();
-    std::cout << "\nhola " << (activo == nullptr ? "" : activo->getNombreUsuario()) << "\n";
-    std::cout << "fotos de amigos:\n";
+    std::cout << "\n";
+    std::cout << " ========================================\n";
+    std::cout << "              UdeABook\n";
+    std::cout << " ========================================\n";
+    std::cout << "hola " << (activo == nullptr ? "?" : activo->getNombreUsuario()) << "\n";
+    if (activo != nullptr) {
+        std::cout << "mensajes nuevos: " << activo->contarNoLeidos() << "\n";
+    }
     mostrarAmigosDestacados(red);
-    std::cout << "1 amistades\n";
-    std::cout << "2 visitar perfil\n";
-    std::cout << "3 sugerencias\n";
-    std::cout << "4 mensajes\n";
-    std::cout << "n cambiar fotos de amigos\n";
-    std::cout << "s salir\n";
+    std::cout << "\nque quieres hacer?\n";
+    std::cout << "  1. amigos y solicitudes\n";
+    std::cout << "  2. ver perfil de un amigo\n";
+    std::cout << "  3. personas que quizas conozcas\n";
+    std::cout << "  4. mensajes\n";
+    std::cout << "  n. otras fotos de amigos\n";
+    std::cout << "  s. salir\n";
 }
 
-void opcionAdministrarAmistades(RedSocial & red) {
+void opcionAmigos(RedSocial & red) {
+    std::cout << "\namigos y solicitudes\n";
+    std::cout << "  a. agregar amigo\n";
+    std::cout << "  b. solicitudes pendientes\n";
+    std::cout << "  s. volver\n";
     char op[8];
-    leerTexto("a enviar solicitud, b aceptar, s volver: ", op, 8);
+    leerTexto("> ", op, 8);
+
     if (op[0] == 'a' || op[0] == 'A') {
         red.iniciarMedicion(FUNC_ENVIAR_SOLICITUD);
         char nombre[64];
-        leerTexto("usuario destino: ", nombre, 64);
+        leerTexto("a quien le envias la solicitud? ", nombre, 64);
         decir(red.enviarSolicitud(nombre));
-        red.mostrarReporte();
+        cerrarFuncionalidad(red);
         return;
     }
     if (op[0] != 'b' && op[0] != 'B') {
         return;
     }
+
     red.iniciarMedicion(FUNC_ACEPTAR_SOLICITUD);
-    unsigned int emisores[64];
-    unsigned int n = red.listarSolicitudes(emisores, 64);
+    unsigned int emisores[128];
+    unsigned int n = red.listarSolicitudes(emisores, 128);
     if (n == 0) {
-        std::cout << "no hay solicitudes\n";
-        red.mostrarReporte();
+        std::cout << "no tienes solicitudes\n";
+        cerrarFuncionalidad(red);
         return;
     }
+    std::cout << "te enviaron solicitud:\n";
     for (unsigned int i = 0; i < n; i++) {
         Usuario * emisor = red.getUsuario(emisores[i]);
-        std::cout << (i + 1) << ". " << (emisor == nullptr ? "?" : emisor->getNombreUsuario()) << "\n";
+        std::cout << "  " << (i + 1) << ". "
+                  << (emisor == nullptr ? "?" : emisor->getNombreUsuario()) << "\n";
     }
     char num[16];
     leerTexto("numero a aceptar (enter cancela): ", num, 16);
@@ -169,7 +201,7 @@ void opcionAdministrarAmistades(RedSocial & red) {
     if (num[0] != '\0' && aNumero(num, 0, longitud(num), elegido) && elegido >= 1 && elegido <= n) {
         decir(red.aceptarSolicitud(emisores[elegido - 1]));
     }
-    red.mostrarReporte();
+    cerrarFuncionalidad(red);
 }
 
 void opcionVisitarPerfil(RedSocial & red) {
@@ -185,36 +217,47 @@ void opcionVisitarPerfil(RedSocial & red) {
     }
     if (visitado == nullptr) {
         decir(red.buscarUsuario(nombre) == nullptr ? RES_NO_EXISTE : RES_NO_ES_AMIGO);
-        red.mostrarReporte();
+        cerrarFuncionalidad(red);
         return;
     }
-    std::cout << visitado->getNombreUsuario() << "  " << visitado->getCiudad() << ", " << visitado->getPais() << "\n";
+
+    std::cout << "\n" << visitado->getNombreUsuario() << "\n";
+    std::cout << (visitado->getCiudad() == nullptr ? "-" : visitado->getCiudad())
+              << ", " << (visitado->getPais() == nullptr ? "-" : visitado->getPais()) << "\n";
+
     unsigned int visibles[64];
     unsigned int nv = 0;
+    std::cout << "\nalbumes:\n";
     for (unsigned int i = 0; i < visitado->getNumAlbumes() && nv < 64; i++) {
         AlbumFotos * album = visitado->buscarAlbum(i);
         if (album != nullptr && red.puedeVerAlbum(*visitado, *album)) {
             visibles[nv++] = i;
-            std::cout << nv << ". " << album->getNombre() << " (" << album->getPrivacidad() << ")\n";
+            std::cout << "  " << nv << ". " << album->getNombre()
+                      << " (" << album->getPrivacidad() << ") "
+                      << album->getNumFotos() << " fotos\n";
         }
     }
     if (nv == 0) {
-        std::cout << "no hay albumes visibles\n";
-        red.mostrarReporte();
+        std::cout << "no hay albumes que puedas ver\n";
+        cerrarFuncionalidad(red);
         return;
     }
+
     char num[16];
-    leerTexto("album (enter vuelve): ", num, 16);
+    leerTexto("cual album? (enter vuelve): ", num, 16);
     unsigned long long elegido = 0;
     if (num[0] == '\0' || !aNumero(num, 0, longitud(num), elegido) || elegido < 1 || elegido > nv) {
-        red.mostrarReporte();
+        cerrarFuncionalidad(red);
         return;
     }
+
     AlbumFotos * album = visitado->buscarAlbum(visibles[elegido - 1]);
     int pos = 0;
     bool seguir = album != nullptr && album->getNumFotos() > 0;
     if (!seguir) {
-        std::cout << "el album no tiene fotos\n";
+        std::cout << "ese album esta vacio\n";
+    } else {
+        std::cout << "n siguiente | p anterior | l me gusta | q quitar | s salir\n";
     }
     while (seguir) {
         Foto * foto = album->getFotoCircular(pos);
@@ -223,10 +266,13 @@ void opcionVisitarPerfil(RedSocial & red) {
             copiarEn("?", ruta, 256);
         }
         if (foto != nullptr) {
-            std::cout << foto->getNombreArchivo() << "  likes " << foto->getLikes() << "  " << ruta << "\n";
+            std::cout << "\n" << foto->getNombreArchivo() << ".png\n";
+            std::cout << foto->getFechaCaptura() << "\n";
+            std::cout << "likes: " << foto->getLikes() << "\n";
+            std::cout << ruta << "\n";
         }
         char mov[8];
-        leerTexto("n siguiente, p previa, l like, q quitar, s volver: ", mov, 8);
+        leerTexto("> ", mov, 8);
         if (mov[0] == 's' || mov[0] == 'S' || mov[0] == '\0') {
             seguir = false;
         } else if (mov[0] == 'n' || mov[0] == 'N') {
@@ -237,33 +283,35 @@ void opcionVisitarPerfil(RedSocial & red) {
             decir(red.registrarLike(foto, mov[0] == 'l' || mov[0] == 'L'));
         }
     }
-    red.mostrarReporte();
+    cerrarFuncionalidad(red);
 }
 
 void opcionSugerencias(RedSocial & red) {
     red.iniciarMedicion(FUNC_SUGERENCIAS);
     char num[16];
-    leerTexto("cuantas sugerencias (1 a 20): ", num, 16);
+    leerTexto("cuantas personas quieres ver? (1 a 20): ", num, 16);
     unsigned long long k = 0;
     if (!aNumero(num, 0, longitud(num), k) || k < K_MIN_SUGERENCIAS || k > K_MAX_SUGERENCIAS) {
-        std::cout << "k tiene que estar entre 1 y 20\n";
-        red.mostrarReporte();
+        std::cout << "tiene que ser entre 1 y 20\n";
+        cerrarFuncionalidad(red);
         return;
     }
     unsigned int indices[K_MAX_SUGERENCIAS];
     unsigned int comunes[K_MAX_SUGERENCIAS];
     unsigned short n = red.sugerirAmigos((unsigned short)k, indices, comunes);
     if (n == 0) {
-        std::cout << "no hay sugerencias\n";
-        red.mostrarReporte();
+        std::cout << "no hay sugerencias por ahora\n";
+        cerrarFuncionalidad(red);
         return;
     }
+    std::cout << "\npersonas que quizas conozcas:\n";
     for (unsigned short i = 0; i < n; i++) {
         Usuario * u = red.getUsuario(indices[i]);
-        std::cout << (i + 1) << ". " << (u == nullptr ? "?" : u->getNombreUsuario())
-                  << "  en comun " << comunes[i] << "\n";
+        std::cout << "  " << (i + 1) << ". "
+                  << (u == nullptr ? "?" : u->getNombreUsuario())
+                  << "  (" << comunes[i] << " amigos en comun)\n";
     }
-    leerTexto("numero para enviar solicitud (enter no): ", num, 16);
+    leerTexto("enviar solicitud a cual? (enter no): ", num, 16);
     unsigned long long elegido = 0;
     if (num[0] != '\0' && aNumero(num, 0, longitud(num), elegido) && elegido >= 1 && elegido <= n) {
         Usuario * u = red.getUsuario(indices[elegido - 1]);
@@ -271,32 +319,39 @@ void opcionSugerencias(RedSocial & red) {
             decir(red.enviarSolicitud(u->getNombreUsuario()));
         }
     }
-    red.mostrarReporte();
+    cerrarFuncionalidad(red);
 }
 
 void opcionMensajes(RedSocial & red) {
+    std::cout << "\nmensajes\n";
+    std::cout << "  a. escribir a un amigo\n";
+    std::cout << "  b. leer los nuevos\n";
+    std::cout << "  c. buscar por fechas\n";
+    std::cout << "  s. volver\n";
     char op[8];
-    leerTexto("a enviar, b leer nuevos, c buscar fechas, s volver: ", op, 8);
+    leerTexto("> ", op, 8);
     Usuario * activo = red.getUsuarioActivo();
     if (activo == nullptr) {
         return;
     }
+
     if (op[0] == 'a' || op[0] == 'A') {
         red.iniciarMedicion(FUNC_ENVIAR_MENSAJE);
         char nombre[64];
         char texto[MAX_BYTES_MENSAJE + 1];
-        leerTexto("amigo: ", nombre, 64);
+        leerTexto("para quien: ", nombre, 64);
         leerTexto("mensaje: ", texto, MAX_BYTES_MENSAJE + 1);
         decir(red.enviarMensaje(nombre, texto));
-        red.mostrarReporte();
+        cerrarFuncionalidad(red);
         return;
     }
+
     if (op[0] == 'b' || op[0] == 'B') {
         red.iniciarMedicion(FUNC_LEER_NUEVOS);
         unsigned int desde = activo->getPrimerNoLeido();
         unsigned int n = activo->getMensajesRecibidos().getTamanio();
         if (desde >= n) {
-            std::cout << "no hay mensajes nuevos\n";
+            std::cout << "no tienes mensajes nuevos\n";
         }
         for (unsigned int i = desde; i < n; i++) {
             Mensaje * m = activo->getMensajesRecibidos()[i];
@@ -304,24 +359,28 @@ void opcionMensajes(RedSocial & red) {
                 continue;
             }
             const char * quien = m->getEmisor() == nullptr ? "?" : m->getEmisor()->getNombreUsuario();
-            std::cout << quien << "  " << m->getFechaEnvio() << "  " << m->getTexto() << "\n";
+            std::cout << quien << " - " << m->getFechaEnvio() << "\n";
+            std::cout << "  " << m->getTexto() << "\n";
         }
         char marca[8];
-        leerTexto("marcar leidos? s/n: ", marca, 8);
+        leerTexto("marcar como leidos? (s/n): ", marca, 8);
         if (marca[0] == 's' || marca[0] == 'S') {
             decir(red.marcarMensajesLeidos());
         }
-        red.mostrarReporte();
+        cerrarFuncionalidad(red);
         return;
     }
+
     if (op[0] != 'c' && op[0] != 'C') {
         return;
     }
+
     red.iniciarMedicion(FUNC_RANGO_MENSAJES);
     char inicioTxt[16];
     char finTxt[16];
-    leerTexto("desde AAAAMMDD: ", inicioTxt, 16);
-    leerTexto("hasta AAAAMMDD: ", finTxt, 16);
+    std::cout << "escribe las fechas asi: AAAAMMDD\n";
+    leerTexto("desde: ", inicioTxt, 16);
+    leerTexto("hasta: ", finTxt, 16);
     unsigned long long ai = 0;
     unsigned long long mi = 0;
     unsigned long long di = 0;
@@ -336,16 +395,18 @@ void opcionMensajes(RedSocial & red) {
     unsigned int desde = 0;
     unsigned int hasta = 0;
     if (!ok || !activo->buscarRangoMensajes(inicio, fin, desde, hasta)) {
-        std::cout << "no hay mensajes en ese rango\n";
+        std::cout << "no hay mensajes en esas fechas\n";
     } else {
         for (unsigned int i = desde; i < hasta; i++) {
             Mensaje * m = activo->getMensajesRecibidos()[i];
             if (m != nullptr) {
-                std::cout << m->getFechaEnvio() << "  " << m->getTexto() << "\n";
+                const char * quien = m->getEmisor() == nullptr ? "?" : m->getEmisor()->getNombreUsuario();
+                std::cout << quien << " - " << m->getFechaEnvio() << "\n";
+                std::cout << "  " << m->getTexto() << "\n";
             }
         }
     }
-    red.mostrarReporte();
+    cerrarFuncionalidad(red);
 }
 
 void opcionActualizarFotos(RedSocial & red) {
@@ -355,7 +416,7 @@ void opcionActualizarFotos(RedSocial & red) {
     if (codigo == RES_OK) {
         mostrarAmigosDestacados(red);
     }
-    red.mostrarReporte();
+    cerrarFuncionalidad(red);
 }
 
 void ejecutarSesion(RedSocial & red) {
@@ -367,7 +428,7 @@ void ejecutarSesion(RedSocial & red) {
         if (op[0] == 's' || op[0] == 'S') {
             seguir = false;
         } else if (op[0] == '1') {
-            opcionAdministrarAmistades(red);
+            opcionAmigos(red);
         } else if (op[0] == '2') {
             opcionVisitarPerfil(red);
         } else if (op[0] == '3') {
@@ -376,8 +437,11 @@ void ejecutarSesion(RedSocial & red) {
             opcionMensajes(red);
         } else if (op[0] == 'n' || op[0] == 'N') {
             opcionActualizarFotos(red);
+        } else {
+            std::cout << "opcion invalida\n";
         }
     }
     red.cerrarSesion();
+    std::cout << "\nresumen de la sesion\n";
     red.mostrarResumenSesion();
 }

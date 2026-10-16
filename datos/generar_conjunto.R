@@ -66,6 +66,13 @@ for (a in 35:44) {
     marcarAmistad(a, b)
   }
 }
+#100..119 no son amigos de u0000, pero si de varios del clique: sirven como sugerencias
+for (a in 100:119) {
+  cuantos <- 3 + ((a - 100) %% 3)
+  for (b in 1:cuantos) {
+    marcarAmistad(a, b)
+  }
+}
 #el resto tiene algunas amistades sueltas, sin tocar el grado de u0000
 for (k in 1:800) {
   a <- sample(45:(n - 1), 1)

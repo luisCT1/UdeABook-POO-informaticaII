@@ -74,17 +74,17 @@ bool aNumero(const char * texto, unsigned int desde, unsigned int hasta, unsigne
     unsigned long long resultado = 0;
     for (unsigned int i = desde; i < hasta; i++) {
         if (texto[i] < '0' || texto[i] > '9') {
-            MedidorRecursos::sumarIteraciones(i - desde + 1);
+            MedidorRecursos::sumarComun(i - desde + 1);
             return false;
         }
         unsigned int digito = (unsigned int)(texto[i] - '0');
         if (resultado > (MAXIMO - digito) / 10) {
-            MedidorRecursos::sumarIteraciones(i - desde + 1);
+            MedidorRecursos::sumarComun(i - desde + 1);
             return false;
         }
         resultado = resultado * 10 + digito;
     }
-    MedidorRecursos::sumarIteraciones(hasta - desde);
+    MedidorRecursos::sumarComun(hasta - desde);
     valor = resultado;
     return true;
 }
@@ -99,21 +99,21 @@ void escribirNumero(unsigned long long valor, unsigned int ancho, char * destino
 
 const char * descripcionResultado(unsigned short codigoResultado) {
     switch (codigoResultado) {
-    case RES_OK:                     return "operacion realizada";
-    case RES_SIN_SESION:             return "hay que iniciar sesion primero";
-    case RES_NO_EXISTE:              return "ese usuario no existe";
-    case RES_ES_UNO_MISMO:           return "no puede hacerlo con su propio usuario";
-    case RES_YA_SON_AMIGOS:          return "ya son amigos";
-    case RES_ELLOS_YA_ENVIARON:      return "ese usuario ya le envio una solicitud";
-    case RES_SOLICITUD_REPETIDA:     return "ya hay una solicitud pendiente";
-    case RES_NO_ES_AMIGO:            return "ese usuario no es su amigo";
-    case RES_TEXTO_INVALIDO:         return "el mensaje esta vacio o se pasa del limite";
-    case RES_NO_HAY_SOLICITUD:       return "no hay una solicitud pendiente de ese usuario";
-    case RES_ERROR_MEMORIA:          return "no hay memoria suficiente";
-    case RES_ERROR_ARCHIVO:          return "fallo al leer o escribir un archivo";
-    case RES_YA_ACTUALIZO:           return "el cambio de fotos solo se permite una vez";
-    case RES_CONTRASENA_INCORRECTA:  return "la contrasena no coincide";
-    case RES_SIN_CANDIDATOS:         return "no hay amigos distintos para otro grupo de fotos";
-    default:                         return "resultado desconocido";
+    case RES_OK:                    return "Operacion realizada correctamente.";
+    case RES_SIN_SESION:            return "Debe iniciar sesion primero.";
+    case RES_NO_EXISTE:             return "Ese usuario no existe.";
+    case RES_ES_UNO_MISMO:          return "No puede hacerlo con su propio usuario.";
+    case RES_YA_SON_AMIGOS:         return "Ya son amigos.";
+    case RES_ELLOS_YA_ENVIARON:     return "Ese usuario ya le envio una solicitud: acepte esa en vez de enviar otra.";
+    case RES_SOLICITUD_REPETIDA:    return "Ya le envio una solicitud a ese usuario y sigue pendiente.";
+    case RES_NO_ES_AMIGO:           return "Ese usuario no es su amigo.";
+    case RES_TEXTO_INVALIDO:        return "El mensaje no es valido: esta vacio, supera los 512 bytes o tiene saltos de linea.";
+    case RES_NO_HAY_SOLICITUD:      return "No hay una solicitud pendiente de ese usuario.";
+    case RES_ERROR_MEMORIA:         return "No hay memoria suficiente para completar la operacion.";
+    case RES_ERROR_ARCHIVO:         return "Fallo al leer o escribir un archivo de datos.";
+    case RES_YA_ACTUALIZO:          return "Ya uso el cambio de fotos: solo se permite una vez.";
+    case RES_CONTRASENA_INCORRECTA: return "La contrasena no es correcta.";
+    case RES_SIN_CANDIDATOS:        return "No hay amigos distintos para mostrar otro grupo de fotos.";
+    default:                        return "Resultado desconocido.";
     }
 }

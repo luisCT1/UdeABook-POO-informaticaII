@@ -35,6 +35,11 @@ bool Mensaje::textoValido(const char * texto) {
         return false;
     }
     //una enie o una tilde ocupan 2 bytes, por eso el tope es en bytes y no en letras
+    for (unsigned int i = 0; texto[i] != '\0'; i++) {
+        if (texto[i] == '\n' || texto[i] == '\r') {
+            return false;
+        }
+    }
     return longitud(texto) <= MAX_BYTES_MENSAJE;
 }
 
