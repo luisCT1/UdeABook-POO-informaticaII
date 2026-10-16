@@ -26,6 +26,7 @@ public:
 
     static void sumarIteraciones(unsigned long long n = 1);
     static void sumarReferencia(unsigned long long n);
+    static void sumarComun(unsigned long long n = 1);
     static void sumarUsoExterno(unsigned long long n = 1);
     static void sumarMemoriaLocal(unsigned long bytes);
 
