@@ -53,11 +53,9 @@ const unsigned short RES_NO_HAY_SOLICITUD    = 9;
 const unsigned short RES_ERROR_MEMORIA       = 10;
 const unsigned short RES_ERROR_ARCHIVO       = 11;
 const unsigned short RES_YA_ACTUALIZO        = 12;
-const unsigned short RES_CONTRASENA_INCORRECTA = 13;  // usuario existe pero la contrasena no coincide
-const unsigned short RES_SIN_CANDIDATOS      = 14;  // no hay amigos distintos para mostrar otro grupo de fotos
+const unsigned short RES_CONTRASENA_INCORRECTA = 13;
+const unsigned short RES_SIN_CANDIDATOS      = 14;
 
-// ---- Reloj ----------------------------------------------------------------------------------
-// Segundos de diferencia con UTC para fechar los mensajes nuevos (Colombia = UTC-5).
 const int DESPLAZAMIENTO_HORARIO = -5 * 3600;
 
 #endif

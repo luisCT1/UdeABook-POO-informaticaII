@@ -32,7 +32,6 @@ public:
     bool estaValido() const;
 
     bool cargarDatos();
-
     bool inicializarRed(unsigned int numUsuarios);
     bool agregarUsuario(Usuario * usuario);
     RedAmistades & getAmistades();
@@ -44,7 +43,6 @@ public:
     MedidorRecursos & getMedidor();
     Usuario * buscarUsuario(const char * nombre) const;
     Usuario * buscarAmigo(const char * nombre) const;
-
     bool puedeVerAlbum(const Usuario & duenio, const AlbumFotos & album) const;
 
     unsigned short iniciarSesion(const char * nombre, const char * contrasena);
@@ -57,12 +55,10 @@ public:
     unsigned short enviarSolicitud(const char * nombreDestino);
     unsigned int listarSolicitudes(unsigned int * emisores, unsigned int capacidad) const;
     unsigned short aceptarSolicitud(unsigned int indiceEmisor);
-
     unsigned short sugerirAmigos(unsigned short k, unsigned int * indices, unsigned int * comunes) const;
 
     unsigned short enviarMensaje(const char * nombreDestino, const char * texto);
     unsigned short marcarMensajesLeidos();
-
     unsigned short registrarLike(Foto * foto, bool dar);
 
     void iniciarMedicion(unsigned short idFuncionalidad);

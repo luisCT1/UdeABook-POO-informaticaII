@@ -15,7 +15,6 @@ private:
     std::mt19937 generador;
     bool valido;
 
-
     bool leerBit(const unsigned long long * matriz, unsigned int fila, unsigned int columna) const;
     void  escribirBit(unsigned long long * matriz, unsigned int fila, unsigned int columna, bool valor);
     unsigned int contarBits(unsigned long long palabra) const;
@@ -34,13 +33,11 @@ public:
     unsigned int getNumUsuarios() const;
     void setSemilla(unsigned int semilla);
 
-    // ---- Amistades ----
     bool conectar(unsigned int a, unsigned int b);
     bool sonAmigos(unsigned int a, unsigned int b) const;
     unsigned int getGrado(unsigned int a) const;
     unsigned int contarEnComun(unsigned int a, unsigned int b) const;
     unsigned int obtenerAmigos(unsigned int a, unsigned int * salida, unsigned int capacidad) const;
-
 
     unsigned short enviarSolicitud(unsigned int emisor, unsigned int receptor);
     bool tieneSolicitud(unsigned int emisor, unsigned int receptor) const;
@@ -48,7 +45,6 @@ public:
     unsigned int obtenerSolicitudes(unsigned int receptor, unsigned int * emisores, unsigned int capacidad) const;
     bool aceptarSolicitud(unsigned int emisor, unsigned int receptor);
     void marcarSolicitud(unsigned int emisor, unsigned int receptor);
-
 
     unsigned short sortearAmigos(unsigned int usuario, unsigned short cuantos,
                                  const unsigned int * excluidos, unsigned short numExcluidos,

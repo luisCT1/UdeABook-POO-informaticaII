@@ -17,7 +17,6 @@ static const char * const NOMBRES[NUM_FUNCIONALIDADES] = {
     "Actualizar fotos de amigos"
 };
 
-
 static void formatear(unsigned long long valor, char * destino) {
     char digitos[24];
     int cuantos = 0;
@@ -37,7 +36,6 @@ static void formatear(unsigned long long valor, char * destino) {
     }
     destino[posicion] = '\0';
 }
-
 
 static void etiqueta(const char * texto) {
     cout << " " << left << setfill('.') << setw(42) << texto << setfill(' ') << " ";
@@ -64,6 +62,7 @@ static void linea(const char * texto, unsigned long long valor) {
 }
 
 MedidorRecursos * MedidorRecursos::activo = nullptr;
+bool MedidorRecursos::contando = true;
 
 MedidorRecursos::MedidorRecursos()
     : funcionalidadActual(FUNC_CARGA),
@@ -93,6 +92,9 @@ MedidorRecursos & MedidorRecursos::obtener() {
 }
 
 void MedidorRecursos::sumarIteraciones(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.iterFuncionalidad += n;
     m.iterPorFunc[m.funcionalidadActual] += n;
@@ -102,6 +104,9 @@ void MedidorRecursos::sumarIteraciones(unsigned long long n) {
 }
 
 void MedidorRecursos::sumarReferencia(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.refFuncionalidad += n;
     m.refPorFunc[m.funcionalidadActual] += n;
@@ -116,6 +121,9 @@ void MedidorRecursos::sumarComun(unsigned long long n) {
 }
 
 void MedidorRecursos::sumarUsoExterno(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.extFuncionalidad += n;
     m.extPorFunc[m.funcionalidadActual] += n;
@@ -126,6 +134,14 @@ void MedidorRecursos::sumarUsoExterno(unsigned long long n) {
 
 void MedidorRecursos::sumarMemoriaLocal(unsigned long bytes) {
     obtener().memoriaLocal += bytes;
+}
+
+void MedidorRecursos::pausarConteo() {
+    contando = false;
+}
+
+void MedidorRecursos::reanudarConteo() {
+    contando = true;
 }
 
 void MedidorRecursos::iniciarFuncionalidad(unsigned short idFuncionalidad) {

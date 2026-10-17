@@ -9,13 +9,16 @@
 #include "MedidorRecursos.h"
 #include "utilidades.h"
 #include "configuracion.h"
+
 #include <chrono>
+#include <new>
 
-using namespace std;
+namespace {
 
-static FechaHora ahoraLocal() {
+FechaHora ahoraLocal() {
     MedidorRecursos::sumarUsoExterno();
-    long long segundos = chrono::duration_cast<chrono::seconds>(chrono::system_clock::now().time_since_epoch()).count();
+    long long segundos = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
     segundos += DESPLAZAMIENTO_HORARIO;
     long long dias = segundos / 86400;
     long long resto = segundos % 86400;
@@ -39,11 +42,13 @@ static FechaHora ahoraLocal() {
                      (short)(resto / 3600), (short)((resto % 3600) / 60), (short)(resto % 60));
 }
 
+}
+
 RedSocial::RedSocial(const char * rutaDatos, const char * subRutaFija)
-    : amistades(nullptr), gestor(nullptr), medidor(nullptr), usuarioActivo(nullptr), grupoFotos(nullptr),
-    cantidadGrupo(0), fotosActualizadas(false), valido(true) {
-    medidor = new (nothrow) MedidorRecursos();
-    gestor = new (nothrow) GestorArchivos(rutaDatos, subRutaFija);
+    : amistades(nullptr), gestor(nullptr), medidor(nullptr), usuarioActivo(nullptr),
+      grupoFotos(nullptr), cantidadGrupo(0), fotosActualizadas(false), valido(true) {
+    medidor = new (std::nothrow) MedidorRecursos();
+    gestor = new (std::nothrow) GestorArchivos(rutaDatos, subRutaFija);
     grupoFotos = reservar<unsigned int>(TAM_GRUPO_FOTOS);
     if (medidor == nullptr || gestor == nullptr || !gestor->estaValido() || grupoFotos == nullptr) {
         valido = false;
@@ -51,7 +56,7 @@ RedSocial::RedSocial(const char * rutaDatos, const char * subRutaFija)
 }
 
 RedSocial::~RedSocial() {
-    for (unsigned int i = 0; i < usuarios.gettamaño(); i++) {
+    for (unsigned int i = 0; i < usuarios.getTamanio(); i++) {
         delete usuarios[i];
     }
     delete amistades;
@@ -60,20 +65,25 @@ RedSocial::~RedSocial() {
     delete[] grupoFotos;
 }
 
-bool RedSocial::estaValido() const { return valido; }
+bool RedSocial::estaValido() const { return valido && usuarios.estaValida(); }
 
 bool RedSocial::cargarDatos() {
-    if (!valido) {
+    if (!valido || gestor == nullptr || medidor == nullptr) {
         return false;
     }
     medidor->iniciarFuncionalidad(FUNC_CARGA);
-    return gestor->cargarDatos(*this);
+    bool ok = gestor->cargarDatos(*this);
+    if (!ok) {
+        medidor->mostrarAviso("no se pudieron leer los datos");
+    }
+    return ok;
 }
 
 bool RedSocial::inicializarRed(unsigned int numUsuarios) {
-    RedAmistades * nueva = new (nothrow) RedAmistades(numUsuarios);
+    RedAmistades * nueva = new (std::nothrow) RedAmistades(numUsuarios);
     if (nueva == nullptr || !nueva->estaValido()) {
         delete nueva;
+        valido = false;
         return false;
     }
     delete amistades;
@@ -82,18 +92,24 @@ bool RedSocial::inicializarRed(unsigned int numUsuarios) {
 }
 
 bool RedSocial::agregarUsuario(Usuario * usuario) {
-    if (usuario == nullptr) {
-        return false;
-    }
+
     return usuarios.agregar(usuario);
 }
 
-RedAmistades & RedSocial::getAmistades() { return *amistades; }
+RedAmistades & RedSocial::getAmistades() {
+    if (amistades == nullptr) {
+        amistades = new (std::nothrow) RedAmistades();
+    }
+    return *amistades;
+}
 
-unsigned int RedSocial::getNumUsuarios() const { return usuarios.gettamaño(); }
+unsigned int RedSocial::getNumUsuarios() const { return usuarios.getTamanio(); }
 
 Usuario * RedSocial::getUsuario(unsigned int indice) const {
-    return (indice < usuarios.gettamaño()) ? usuarios[indice] : nullptr;
+    if (indice >= usuarios.getTamanio()) {
+        return nullptr;
+    }
+    return usuarios[indice];
 }
 
 Usuario * RedSocial::getUsuarioActivo() const { return usuarioActivo; }
@@ -101,15 +117,34 @@ GestorArchivos & RedSocial::getGestor() { return *gestor; }
 MedidorRecursos & RedSocial::getMedidor() { return *medidor; }
 
 Usuario * RedSocial::buscarUsuario(const char * nombre) const {
+    unsigned int n = usuarios.getTamanio();
     unsigned int bajo = 0;
-    unsigned int alto = usuarios.gettamaño();
+    unsigned int alto = n;
     Usuario * hallado = nullptr;
     unsigned int posicion = 0;
+    unsigned long long vueltas = 0;
     while (bajo < alto) {
+        vueltas++;
         unsigned int medio = bajo + (alto - bajo) / 2;
-        int orden = comparar(nombre, usuarios[medio]->getNombreUsuario());
+        Usuario * u = usuarios[medio];
+        if (u == nullptr) {
+
+            for (unsigned int i = 0; i < n; i++) {
+                vueltas++;
+                Usuario * candidato = usuarios[i];
+                if (candidato != nullptr && iguales(candidato->getNombreUsuario(), nombre)) {
+                    MedidorRecursos::sumarIteraciones(vueltas);
+                    MedidorRecursos::sumarReferencia(i + 1);
+                    return candidato;
+                }
+            }
+            MedidorRecursos::sumarIteraciones(vueltas);
+            MedidorRecursos::sumarReferencia(n);
+            return nullptr;
+        }
+        int orden = comparar(nombre, u->getNombreUsuario());
         if (orden == 0) {
-            hallado = usuarios[medio];
+            hallado = u;
             posicion = medio;
             break;
         }
@@ -119,7 +154,8 @@ Usuario * RedSocial::buscarUsuario(const char * nombre) const {
             bajo = medio + 1;
         }
     }
-    MedidorRecursos::sumarReferencia(hallado != nullptr ? posicion + 1 : usuarios.gettamaño());
+    MedidorRecursos::sumarIteraciones(vueltas);
+    MedidorRecursos::sumarReferencia(hallado != nullptr ? posicion + 1 : n);
     return hallado;
 }
 
@@ -139,7 +175,8 @@ bool RedSocial::puedeVerAlbum(const Usuario & duenio, const AlbumFotos & album) 
     bool esAmigo = false;
     if (usuarioActivo != nullptr) {
         esDueno = (usuarioActivo->getIndice() == duenio.getIndice());
-        esAmigo = (amistades != nullptr) && amistades->sonAmigos(usuarioActivo->getIndice(), duenio.getIndice());
+        esAmigo = (amistades != nullptr)
+            && amistades->sonAmigos(usuarioActivo->getIndice(), duenio.getIndice());
     }
     return album.puedeVer(esDueno, esAmigo);
 }
@@ -154,6 +191,7 @@ unsigned short RedSocial::iniciarSesion(const char * nombre, const char * contra
     }
     usuarioActivo = u;
     fotosActualizadas = false;
+    cantidadGrupo = 0;
     iniciarFotosAmigos();
     MedidorRecursos::sumarMemoriaLocal(sizeof(nombre) + sizeof(contrasena) + sizeof(u));
     return RES_OK;
@@ -167,7 +205,7 @@ void RedSocial::cerrarSesion() {
 
 bool RedSocial::iniciarFotosAmigos() {
     cantidadGrupo = 0;
-    if (usuarioActivo == nullptr || amistades == nullptr) {
+    if (usuarioActivo == nullptr || amistades == nullptr || grupoFotos == nullptr) {
         return false;
     }
     cantidadGrupo = amistades->sortearAmigos(usuarioActivo->getIndice(), TAM_GRUPO_FOTOS, nullptr, 0, grupoFotos);
@@ -175,7 +213,7 @@ bool RedSocial::iniciarFotosAmigos() {
 }
 
 unsigned short RedSocial::actualizarFotosAmigos() {
-    if (usuarioActivo == nullptr || amistades == nullptr) {
+    if (usuarioActivo == nullptr || amistades == nullptr || grupoFotos == nullptr) {
         return RES_SIN_SESION;
     }
     if (fotosActualizadas) {
@@ -200,10 +238,10 @@ unsigned short RedSocial::actualizarFotosAmigos() {
 unsigned short RedSocial::getCantidadGrupo() const { return cantidadGrupo; }
 
 Usuario * RedSocial::getAmigoDestacado(unsigned short posicion) const {
-    if (posicion >= cantidadGrupo) {
+    if (posicion >= cantidadGrupo || grupoFotos == nullptr) {
         return nullptr;
     }
-    return usuarios[grupoFotos[posicion]];
+    return getUsuario(grupoFotos[posicion]);
 }
 
 unsigned short RedSocial::enviarSolicitud(const char * nombreDestino) {
@@ -221,7 +259,7 @@ unsigned short RedSocial::enviarSolicitud(const char * nombreDestino) {
     if (resultado != RES_OK) {
         return resultado;
     }
-    if (!gestor->registrarSolicitud(yo, el)) {
+    if (gestor == nullptr || !gestor->registrarSolicitud(yo, el)) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
@@ -238,7 +276,7 @@ unsigned short RedSocial::aceptarSolicitud(unsigned int indiceEmisor) {
     if (usuarioActivo == nullptr || amistades == nullptr) {
         return RES_SIN_SESION;
     }
-    if (indiceEmisor >= usuarios.gettamaño()) {
+    if (indiceEmisor >= usuarios.getTamanio() || getUsuario(indiceEmisor) == nullptr) {
         return RES_NO_EXISTE;
     }
     unsigned int yo = usuarioActivo->getIndice();
@@ -250,11 +288,12 @@ unsigned short RedSocial::aceptarSolicitud(unsigned int indiceEmisor) {
         return RES_YA_SON_AMIGOS;
     }
     MedidorRecursos::sumarMemoriaLocal(sizeof(indiceEmisor) + sizeof(yo));
-    if (!gestor->registrarAmistad(indiceEmisor, yo)) {
+    if (gestor == nullptr || !gestor->registrarAmistad(indiceEmisor, yo)) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
 }
+
 unsigned short RedSocial::sugerirAmigos(unsigned short k, unsigned int * indices, unsigned int * comunes) const {
     if (usuarioActivo == nullptr || amistades == nullptr || indices == nullptr || comunes == nullptr) {
         return 0;
@@ -266,12 +305,16 @@ unsigned short RedSocial::sugerirAmigos(unsigned short k, unsigned int * indices
         k = K_MAX_SUGERENCIAS;
     }
     unsigned int yo = usuarioActivo->getIndice();
-    unsigned int total = usuarios.gettamaño();
+    unsigned int total = usuarios.getTamanio();
     unsigned short encontrados = 0;
     unsigned long long vueltas = 0;
     for (unsigned int c = 0; c < total; c++) {
         vueltas++;
-        if (c == yo || amistades->sonAmigos(yo, c) || amistades->tieneSolicitud(yo, c) || amistades->tieneSolicitud(c, yo)) {
+        if (usuarios[c] == nullptr) {
+            continue;
+        }
+        if (c == yo || amistades->sonAmigos(yo, c)
+            || amistades->tieneSolicitud(yo, c) || amistades->tieneSolicitud(c, yo)) {
             continue;
         }
         unsigned int enComun = amistades->contarEnComun(yo, c);
@@ -295,8 +338,8 @@ unsigned short RedSocial::sugerirAmigos(unsigned short k, unsigned int * indices
         }
     }
     MedidorRecursos::sumarIteraciones(vueltas);
-    MedidorRecursos::sumarMemoriaLocal(sizeof(k) + sizeof(indices) + sizeof(comunes) + sizeof(yo) + sizeof(total)
-                                       + sizeof(encontrados) + sizeof(vueltas));
+    MedidorRecursos::sumarMemoriaLocal(sizeof(k) + sizeof(indices) + sizeof(comunes) + sizeof(yo)
+                                       + sizeof(total) + sizeof(encontrados) + sizeof(vueltas));
     return encontrados;
 }
 
@@ -317,7 +360,7 @@ unsigned short RedSocial::enviarMensaje(const char * nombreDestino, const char *
     if (!amistades->sonAmigos(usuarioActivo->getIndice(), destino->getIndice())) {
         return RES_NO_ES_AMIGO;
     }
-    Mensaje * mensaje = new (nothrow) Mensaje(usuarioActivo, destino, texto, ahoraLocal());
+    Mensaje * mensaje = new (std::nothrow) Mensaje(usuarioActivo, destino, texto, ahoraLocal());
     if (mensaje == nullptr || !mensaje->estaValido()) {
         delete mensaje;
         return RES_ERROR_MEMORIA;
@@ -328,7 +371,7 @@ unsigned short RedSocial::enviarMensaje(const char * nombreDestino, const char *
     }
     usuarioActivo->registrarEnviado(mensaje);
     MedidorRecursos::sumarMemoriaLocal(sizeof(nombreDestino) + sizeof(texto) + sizeof(destino) + sizeof(mensaje));
-    if (!gestor->registrarMensaje(*mensaje)) {
+    if (gestor == nullptr || !gestor->registrarMensaje(*mensaje)) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
@@ -343,7 +386,7 @@ unsigned short RedSocial::marcarMensajesLeidos() {
     }
     unsigned int nuevoPrimerNoLeido = usuarioActivo->marcarTodosLeidos();
     MedidorRecursos::sumarMemoriaLocal(sizeof(nuevoPrimerNoLeido));
-    if (!gestor->registrarLecturas(usuarioActivo->getIndice(), nuevoPrimerNoLeido)) {
+    if (gestor == nullptr || !gestor->registrarLecturas(usuarioActivo->getIndice(), nuevoPrimerNoLeido)) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
@@ -362,28 +405,45 @@ unsigned short RedSocial::registrarLike(Foto * foto, bool dar) {
         --(*foto);
     }
     MedidorRecursos::sumarMemoriaLocal(sizeof(foto) + sizeof(dar));
-    if (!gestor->registrarLikes(foto->getId(), foto->getLikes())) {
+    if (gestor == nullptr || !gestor->registrarLikes(foto->getId(), foto->getLikes())) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
 }
 
 void RedSocial::iniciarMedicion(unsigned short idFuncionalidad) {
-    medidor->iniciarFuncionalidad(idFuncionalidad);
+    if (medidor != nullptr) {
+        medidor->iniciarFuncionalidad(idFuncionalidad);
+    }
 }
 
 void RedSocial::mostrarReporte() {
-    medidor->finalizarFuncionalidad(calcularMemoria(), calcularMemoriaReferencia());
+    if (medidor != nullptr) {
+        MedidorRecursos::pausarConteo();
+        unsigned long memoria = calcularMemoria();
+        unsigned long referencia = calcularMemoriaReferencia();
+        MedidorRecursos::reanudarConteo();
+        medidor->finalizarFuncionalidad(memoria, referencia);
+        medidor->iniciarFuncionalidad(FUNC_CARGA);
+    }
 }
 
 void RedSocial::mostrarResumenSesion() {
-    medidor->mostrarResumenSesion(calcularMemoria(), calcularMemoriaReferencia());
+    if (medidor != nullptr) {
+        MedidorRecursos::pausarConteo();
+        unsigned long memoria = calcularMemoria();
+        unsigned long referencia = calcularMemoriaReferencia();
+        MedidorRecursos::reanudarConteo();
+        medidor->mostrarResumenSesion(memoria, referencia);
+    }
 }
 
 unsigned long RedSocial::calcularMemoria() const {
     unsigned long total = sizeof(*this) + usuarios.calcularMemoria() - sizeof(usuarios);
-    for (unsigned int i = 0; i < usuarios.gettamaño(); i++) {
-        total += usuarios[i]->calcularMemoria();
+    for (unsigned int i = 0; i < usuarios.getTamanio(); i++) {
+        if (usuarios[i] != nullptr) {
+            total += usuarios[i]->calcularMemoria();
+        }
     }
     if (amistades != nullptr) {
         total += amistades->calcularMemoria();
