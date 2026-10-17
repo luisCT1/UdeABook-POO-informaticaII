@@ -95,7 +95,7 @@ unsigned int Usuario::getNumAlbumes() const {
 
 AlbumFotos * Usuario::buscarAlbum(const char * nombre) const {
     for (unsigned int i = 0; i < albumes.getTamanio(); i++) {
-        MedidorRecursos::sumarIteraciones();
+        MedidorRecursos::sumarReferencia(1);
         if (albumes[i] != nullptr && iguales(albumes[i]->getNombre(), nombre)) {
             return albumes[i];
         }
@@ -140,6 +140,7 @@ unsigned int Usuario::marcarTodosLeidos() {
             mensajesRecibidos[i]->setLeido(true);
         }
     }
+    MedidorRecursos::sumarReferencia(n);
     primerNoLeido = n;
     return primerNoLeido;
 }
@@ -147,7 +148,6 @@ unsigned int Usuario::marcarTodosLeidos() {
 bool Usuario::buscarRangoMensajes(const FechaHora & inicio, const FechaHora & fin,
                                   unsigned int & desde, unsigned int & hasta) const {
     unsigned int n = mensajesRecibidos.getTamanio();
-    //la alternativa ingenua recorreria toda la bandeja
     MedidorRecursos::sumarReferencia(n);
     unsigned int lo = 0;
     unsigned int hi = n;
@@ -188,22 +188,21 @@ bool Usuario::operator==(const Usuario & otro) const {
 
 unsigned long Usuario::calcularMemoria() const {
     unsigned long total = sizeof(*this);
-    total += albumes.calcularMemoria();
-    total += mensajesRecibidos.calcularMemoria();
-    total += mensajesEnviados.calcularMemoria();
+
+    total += albumes.calcularMemoria() - sizeof(albumes);
+    total += mensajesRecibidos.calcularMemoria() - sizeof(mensajesRecibidos);
+    total += mensajesEnviados.calcularMemoria() - sizeof(mensajesEnviados);
     if (nombreUsuario != nullptr) total += longitud(nombreUsuario) + 1;
     if (correo != nullptr) total += longitud(correo) + 1;
     if (contrasena != nullptr) total += longitud(contrasena) + 1;
     if (ciudad != nullptr) total += longitud(ciudad) + 1;
     if (pais != nullptr) total += longitud(pais) + 1;
     for (unsigned int i = 0; i < albumes.getTamanio(); i++) {
-        MedidorRecursos::sumarIteraciones();
         if (albumes[i] != nullptr) {
             total += albumes[i]->calcularMemoria();
         }
     }
     for (unsigned int i = 0; i < mensajesRecibidos.getTamanio(); i++) {
-        MedidorRecursos::sumarIteraciones();
         if (mensajesRecibidos[i] != nullptr) {
             total += mensajesRecibidos[i]->calcularMemoria();
         }

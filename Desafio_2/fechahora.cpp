@@ -26,7 +26,7 @@ short diasDelMes(short anio, short mes) {
 }
 
 bool numerosValidos(short anio, short mes, short dia, short hora, short minuto, short segundo) {
-    if (anio < 1 || mes < 1 || mes > 12 || dia < 1) {
+    if (anio < 1 || anio > 9999 || mes < 1 || mes > 12 || dia < 1) {
         return false;
     }
     if (dia > diasDelMes(anio, mes)) {

@@ -72,6 +72,8 @@ Foto * AlbumFotos::getFotoCircular(int posicion) const {
     if (i < 0) {
         i += n;
     }
+
+    MedidorRecursos::sumarReferencia((unsigned long long)i + 1);
     return fotos[(unsigned int)i];
 }
 
@@ -89,12 +91,11 @@ bool AlbumFotos::puedeVer(bool esDueno, bool esAmigo) const {
 }
 
 unsigned long AlbumFotos::calcularMemoria() const {
-    unsigned long total = sizeof(*this) + fotos.calcularMemoria();
+    unsigned long total = sizeof(*this) + fotos.calcularMemoria() - sizeof(fotos);
     if (nombre != nullptr) {
         total += longitud(nombre) + 1;
     }
     for (unsigned int i = 0; i < fotos.getTamanio(); i++) {
-        MedidorRecursos::sumarIteraciones();
         if (fotos[i] != nullptr) {
             total += fotos[i]->calcularMemoria();
         }

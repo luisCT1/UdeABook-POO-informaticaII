@@ -60,40 +60,6 @@ bool leerIndice(const char * texto, unsigned int & valor) {
     return true;
 }
 
-bool nombreRepetido(RedSocial & red, const char * nombre) {
-    for (unsigned int i = 0; i < red.getNumUsuarios(); i++) {
-        MedidorRecursos::sumarIteraciones();
-        Usuario * u = red.getUsuario(i);
-        if (u != nullptr && iguales(u->getNombreUsuario(), nombre)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-Foto * buscarFoto(RedSocial & red, unsigned int id) {
-    for (unsigned int u = 0; u < red.getNumUsuarios(); u++) {
-        Usuario * usuario = red.getUsuario(u);
-        if (usuario == nullptr) {
-            continue;
-        }
-        for (unsigned int a = 0; a < usuario->getNumAlbumes(); a++) {
-            AlbumFotos * album = usuario->buscarAlbum(a);
-            if (album == nullptr) {
-                continue;
-            }
-            for (unsigned int f = 0; f < album->getNumFotos(); f++) {
-                MedidorRecursos::sumarIteraciones();
-                Foto * foto = album->getFoto(f);
-                if (foto != nullptr && foto->getId() == id) {
-                    return foto;
-                }
-            }
-        }
-    }
-    return nullptr;
-}
-
 bool mensajeIgual(const Mensaje * mensaje, Usuario * emisor, const FechaHora & fecha, const char * texto) {
     if (mensaje == nullptr || mensaje->getEmisor() != emisor) {
         return false;
@@ -222,8 +188,8 @@ bool GestorArchivos::leerLinea(std::ifstream & archivo, char * buffer, unsigned 
     unsigned int i = 0;
     bool algo = false;
     while (true) {
-        int c = archivo.get();
-        if (!archivo || c == EOF) {
+        char c;
+        if (!archivo.get(c)) {
             buffer[i] = '\0';
             return algo;
         }
@@ -237,7 +203,7 @@ bool GestorArchivos::leerLinea(std::ifstream & archivo, char * buffer, unsigned 
             return true;
         }
         if (i + 1 < capacidad) {
-            buffer[i++] = (char)c;
+            buffer[i++] = c;
         }
     }
 }
@@ -258,6 +224,8 @@ bool GestorArchivos::anexarLinea(unsigned short idArchivo, const char * linea, u
         return false;
     }
     MedidorRecursos::sumarUsoExterno();
+    MedidorRecursos::sumarIteraciones(1);
+    MedidorRecursos::sumarReferencia(idArchivo < NUM_ARCHIVOS ? registros[idArchivo] + 1 : 1);
     if (idArchivo < NUM_ARCHIVOS) {
         registros[idArchivo]++;
     }
@@ -282,10 +250,13 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
         return false;
     }
     char linea[MAX_LINEA];
+    Usuario * ultimoValido = nullptr;
+    unsigned int descartados = 0;
     while (leerLinea(archivo, linea, MAX_LINEA)) {
         registros[ARCH_USUARIOS]++;
         unsigned int indice = red.getNumUsuarios();
         if (linea[0] == '\0') {
+            descartados++;
             red.agregarUsuario(nullptr);
             continue;
         }
@@ -300,13 +271,16 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
         if (!tomarCampo(linea, i, nombre, 64) || !tomarCampo(linea, i, nacimiento, 16)
             || !tomarCampo(linea, i, correo, 80) || !tomarCampo(linea, i, clave, 64)
             || !tomarCampo(linea, i, ciudad, 64) || !tomarCampo(linea, i, pais, 64)
-            || !tomarCampo(linea, i, inscripcion, 16) || nombreRepetido(red, nombre)) {
+            || !tomarCampo(linea, i, inscripcion, 16)
+            || (ultimoValido != nullptr && comparar(nombre, ultimoValido->getNombreUsuario()) <= 0)) {
+            descartados++;
             red.agregarUsuario(nullptr);
             continue;
         }
         FechaHora fechaNacimiento;
         FechaHora fechaInscripcion;
         if (!fechaNacimiento.desdeTexto14(nacimiento) || !fechaInscripcion.desdeTexto14(inscripcion)) {
+            descartados++;
             red.agregarUsuario(nullptr);
             continue;
         }
@@ -314,6 +288,7 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
         if (usuario == nullptr || !usuario->estaValido() || !usuario->setCorreo(correo)
             || !usuario->setCiudad(ciudad) || !usuario->setPais(pais)) {
             delete usuario;
+            descartados++;
             red.agregarUsuario(nullptr);
             continue;
         }
@@ -321,6 +296,10 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
             delete usuario;
             return false;
         }
+        ultimoValido = usuario;
+    }
+    if (descartados > 0 && mostrarMensajes) {
+        std::cout << "AVISO usuarios.txt: " << descartados << " lineas descartadas (formato, fecha, repetido o fuera de orden); su indice queda vacio\n";
     }
     return red.inicializarRed(red.getNumUsuarios());
 }
@@ -332,8 +311,8 @@ bool GestorArchivos::cargarMultimedia(RedSocial & red) {
     }
     std::ifstream archivo(ruta);
     if (!archivo) {
-        std::cout << "AVISO no se pudo abrir " << ruta << "\n";
-        return false;
+        std::cout << "AVISO no existe " << ruta << ": se toma como vacio\n";
+        return true;
     }
     AlbumFotos * album = nullptr;
     unsigned int idFoto = 0;
@@ -394,8 +373,8 @@ bool GestorArchivos::cargarAmistades(RedSocial & red) {
     }
     std::ifstream archivo(ruta);
     if (!archivo) {
-        std::cout << "AVISO no se pudo abrir " << ruta << "\n";
-        return false;
+        std::cout << "AVISO no existe " << ruta << ": se toma como vacio\n";
+        return true;
     }
     char linea[MAX_LINEA];
     while (leerLinea(archivo, linea, MAX_LINEA)) {
@@ -424,8 +403,8 @@ bool GestorArchivos::cargarSolicitudes(RedSocial & red) {
     }
     std::ifstream archivo(ruta);
     if (!archivo) {
-        std::cout << "AVISO no se pudo abrir " << ruta << "\n";
-        return false;
+        std::cout << "AVISO no existe " << ruta << ": se toma como vacio\n";
+        return true;
     }
     char linea[MAX_LINEA];
     while (leerLinea(archivo, linea, MAX_LINEA)) {
@@ -461,8 +440,8 @@ bool GestorArchivos::cargarMensajes(RedSocial & red) {
     }
     std::ifstream archivo(ruta);
     if (!archivo) {
-        std::cout << "AVISO no se pudo abrir " << ruta << "\n";
-        return false;
+        std::cout << "AVISO no existe " << ruta << ": se toma como vacio\n";
+        return true;
     }
     char linea[MAX_LINEA];
     while (leerLinea(archivo, linea, MAX_LINEA)) {
@@ -498,16 +477,12 @@ bool GestorArchivos::cargarMensajes(RedSocial & red) {
         if (emisor == nullptr || receptor == nullptr || !fecha.desdeTexto14(fechaTxt)) {
             continue;
         }
-        bool repetido = false;
         ListaDinamica<Mensaje *> & bandeja = receptor->getMensajesRecibidos();
-        for (unsigned int m = 0; m < bandeja.getTamanio(); m++) {
-            MedidorRecursos::sumarIteraciones();
-            if (mensajeIgual(bandeja[m], emisor, fecha, texto)) {
-                repetido = true;
+        if (bandeja.getTamanio() > 0) {
+            const Mensaje * ultimo = bandeja[bandeja.getTamanio() - 1];
+            if (ultimo != nullptr && (fecha < ultimo->getFechaEnvio() || mensajeIgual(ultimo, emisor, fecha, texto))) {
+                continue;
             }
-        }
-        if (repetido) {
-            continue;
         }
         Mensaje * mensaje = new (std::nothrow) Mensaje(emisor, receptor, texto, fecha);
         if (mensaje == nullptr || !mensaje->estaValido() || !receptor->recibirMensaje(mensaje)) {
@@ -526,9 +501,12 @@ bool GestorArchivos::cargarCambios(RedSocial & red) {
     }
     std::ifstream archivo(ruta);
     if (!archivo) {
-        std::cout << "AVISO no se pudo abrir " << ruta << "\n";
-        return false;
+        std::cout << "AVISO no existe " << ruta << ": se toma como vacio\n";
+        return true;
     }
+
+    ListaDinamica<Foto *> fotosPorId;
+    bool tablaLista = false;
     char linea[MAX_LINEA];
     while (leerLinea(archivo, linea, MAX_LINEA)) {
         if (linea[0] == '\0') {
@@ -553,21 +531,46 @@ bool GestorArchivos::cargarCambios(RedSocial & red) {
                 continue;
             }
             unsigned int n = usuario->getMensajesRecibidos().getTamanio();
-            if (b > n) {
-                b = n;
-            }
-            usuario->setPrimerNoLeido(b);
-            for (unsigned int m = 0; m < n; m++) {
-                MedidorRecursos::sumarIteraciones();
-                Mensaje * mensaje = usuario->getMensajesRecibidos()[m];
-                if (mensaje != nullptr) {
-                    mensaje->setLeido(m < b);
+            usuario->setPrimerNoLeido(b > n ? n : b);     //gana el ultimo registro; se recorta a la bandeja
+        } else {
+            if (!tablaLista) {
+                tablaLista = true;
+                for (unsigned int u = 0; u < red.getNumUsuarios(); u++) {
+                    Usuario * usuario = red.getUsuario(u);
+                    if (usuario == nullptr) {
+                        continue;
+                    }
+                    for (unsigned int al = 0; al < usuario->getNumAlbumes(); al++) {
+                        AlbumFotos * album = usuario->buscarAlbum(al);
+                        for (unsigned int f = 0; album != nullptr && f < album->getNumFotos(); f++) {
+                            Foto * foto = album->getFoto(f);
+                            Foto * vacio = nullptr;
+                            while (fotosPorId.getTamanio() <= foto->getId()) {
+                                if (!fotosPorId.agregar(vacio)) {
+                                    return false;
+                                }
+                            }
+                            fotosPorId[foto->getId()] = foto;
+                        }
+                    }
                 }
             }
-        } else {
-            Foto * foto = buscarFoto(red, a);
-            if (foto != nullptr) {
-                foto->setLikes(b);
+            if (a < fotosPorId.getTamanio() && fotosPorId[a] != nullptr) {
+                fotosPorId[a]->setLikes(b);
+            }
+        }
+    }
+
+    for (unsigned int u = 0; u < red.getNumUsuarios(); u++) {
+        Usuario * usuario = red.getUsuario(u);
+        if (usuario == nullptr) {
+            continue;
+        }
+        ListaDinamica<Mensaje *> & bandeja = usuario->getMensajesRecibidos();
+        unsigned int leidos = usuario->getPrimerNoLeido();
+        for (unsigned int m = 0; m < leidos && m < bandeja.getTamanio(); m++) {
+            if (bandeja[m] != nullptr) {
+                bandeja[m]->setLeido(true);
             }
         }
     }

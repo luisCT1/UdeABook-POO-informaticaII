@@ -13,12 +13,20 @@
 
 namespace {
 
+bool entradaCerrada = false;
+
 void leerTexto(const char * aviso, char * buffer, unsigned int cap) {
     std::cout << aviso;
-    if (!std::cin.getline(buffer, cap)) {
-        std::cin.clear();
-        buffer[0] = '\0';
+    if (std::cin.getline(buffer, cap)) {
+        return;
     }
+    if (std::cin.eof()) {
+        entradaCerrada = true;
+    } else {
+        std::cin.clear();
+        std::cin.ignore(1000000, '\n');
+    }
+    buffer[0] = '\0';
 }
 
 void decir(unsigned short codigo) {
@@ -82,7 +90,6 @@ void cerrarFuncionalidad(RedSocial & red) {
 }
 
 const char * seleccionarDataset() {
-    //busca sola la carpeta, sin preguntar nada raro al usuario
     static char ruta[512];
     char intento[512];
     copiarEn("datos/conjunto", intento, 512);
@@ -362,9 +369,7 @@ void opcionMensajes(RedSocial & red) {
             std::cout << quien << " - " << m->getFechaEnvio() << "\n";
             std::cout << "  " << m->getTexto() << "\n";
         }
-        char marca[8];
-        leerTexto("marcar como leidos? (s/n): ", marca, 8);
-        if (marca[0] == 's' || marca[0] == 'S') {
+        if (desde < n) {
             decir(red.marcarMensajesLeidos());
         }
         cerrarFuncionalidad(red);
@@ -390,11 +395,14 @@ void opcionMensajes(RedSocial & red) {
     bool ok = longitud(inicioTxt) == 8 && longitud(finTxt) == 8
         && aNumero(inicioTxt, 0, 4, ai) && aNumero(inicioTxt, 4, 6, mi) && aNumero(inicioTxt, 6, 8, di)
         && aNumero(finTxt, 0, 4, af) && aNumero(finTxt, 4, 6, mf) && aNumero(finTxt, 6, 8, df);
-    FechaHora inicio((short)ai, (short)mi, (short)di);
-    FechaHora fin((short)af, (short)mf, (short)df);
+    FechaHora inicio;
+    FechaHora fin;
+    bool fechasBien = ok && inicio.setFechaHora((short)ai, (short)mi, (short)di) && fin.setFechaHora((short)af, (short)mf, (short)df);
     unsigned int desde = 0;
     unsigned int hasta = 0;
-    if (!ok || !activo->buscarRangoMensajes(inicio, fin, desde, hasta)) {
+    if (!fechasBien) {
+        std::cout << "fecha invalida: escribe AAAAMMDD con una fecha real, por ejemplo 20260930\n";
+    } else if (!activo->buscarRangoMensajes(inicio, fin, desde, hasta)) {
         std::cout << "no hay mensajes en esas fechas\n";
     } else {
         for (unsigned int i = desde; i < hasta; i++) {
@@ -421,7 +429,7 @@ void opcionActualizarFotos(RedSocial & red) {
 
 void ejecutarSesion(RedSocial & red) {
     bool seguir = true;
-    while (seguir) {
+    while (seguir && !entradaCerrada) {
         mostrarPantallaInicio(red);
         char op[8];
         leerTexto("> ", op, 8);
