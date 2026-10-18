@@ -17,7 +17,6 @@ static const char * const NOMBRES[NUM_FUNCIONALIDADES] = {
     "Actualizar fotos de amigos"
 };
 
-
 static void formatear(unsigned long long valor, char * destino) {
     char digitos[24];
     int cuantos = 0;
@@ -37,7 +36,6 @@ static void formatear(unsigned long long valor, char * destino) {
     }
     destino[posicion] = '\0';
 }
-
 
 static void etiqueta(const char * texto) {
     cout << " " << left << setfill('.') << setw(42) << texto << setfill(' ') << " ";
