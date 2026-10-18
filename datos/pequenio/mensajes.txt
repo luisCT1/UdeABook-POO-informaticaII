@@ -1,280 +1,280 @@
-1|0|20261228221322|61|listo para el parcial de estructuras? (alejandro_restrepo000)
-2|0|20261228221325|34|vamos por un cafe despues de clase
-3|0|20261228221326|36|me pasas los apuntes de informatica?
-4|0|20261228221328|33|quedamos en la biblioteca a las 3
-5|0|20261228221331|30|ya subieron las notas del quiz
-6|0|20261228221332|49|feliz cumple, te mando abrazo (andres_alvarez002)
-7|0|20261228221334|31|esta lloviendo feo por laureles
-8|0|20261228221337|36|te vi en el metro pero no te alcance
-9|0|20261228221338|31|manana hay reunion del proyecto
-10|0|20261228221340|32|me gusto mucho tu foto del viaje
-11|0|20261228221343|53|cuando vamos a cartagena otra vez? (angela_vargas003)
-12|0|20261228221344|40|trae el computador que hay que practicar
-13|0|20261228221346|30|no olvides entregar el informe
-14|0|20261228221349|33|hoy no alcanzo, manana te escribo
-15|0|20261228221350|34|gracias por la ayuda con el codigo
-16|0|20261228221352|49|ese algoritmo ya me tiene loco (carlos_romero075)
-17|0|20261228221355|28|vamos al partido el domingo?
-18|0|20261228221356|30|te deje un mensaje en el grupo
-19|0|20261228221358|21|que haces este finde?
-20|0|20261228221401|27|ya arreglamos lo del commit
-21|0|20261228221402|58|pasa por la cafetera cuando puedas (catalina_rodriguez082)
-22|0|20261228221404|28|me salio un error raro en qt
-23|0|20261228221407|29|listo, ya acepte la solicitud
-24|0|20261228221408|30|mira las fotos del album nuevo
-25|0|20261228221410|25|nos vemos en el bloque 19
-26|0|20261228221413|44|estudiaste para el oral? (david_betancur008)
-27|0|20261228221414|27|buenas, todo bien por alla?
-28|0|20261228221416|31|dale, yo te ayudo con esa parte
-29|0|20261228221419|29|hoy toca laboratorio a las 10
-30|0|20261228221420|25|suerte en la sustentacion
-0|1|20261228221421|61|listo para el parcial de estructuras? [alejandro_betancur038]
-1|0|20261228221423|60|quedamos en la biblioteca a las 3 para alejandro_betancur038
-1|2|20261228221425|58|vamos por un cafe despues de clase [alejandro_restrepo000]
-1|3|20261228221427|54|no olvides entregar el informe [alejandro_restrepo000]
-4|1|20261228221429|58|manana hay reunion del proyecto para alejandro_restrepo000
-2|3|20261228221432|56|me pasas los apuntes de informatica? [alejandro_rios076]
-7|2|20261228221434|56|hoy no alcanzo, manana te escribo para alejandro_rios076
-3|4|20261228221435|54|quedamos en la biblioteca a las 3 [andrea_martinez039]
-3|5|20261228221436|55|gracias por la ayuda con el codigo [andrea_martinez039]
-10|3|20261228221438|45|que haces este finde? para andrea_martinez039
-4|5|20261228221440|51|ya subieron las notas del quiz [andrea_quintero077]
-13|4|20261228221442|54|mira las fotos del album nuevo para andrea_quintero077
-5|6|20261228221445|49|feliz cumple, te mando abrazo [andrea_ramirez001]
-5|7|20261228221448|48|vamos al partido el domingo? [andrea_ramirez001]
-16|5|20261228221450|52|hoy toca laboratorio a las 10 para andrea_ramirez001
-6|7|20261228221451|51|esta lloviendo feo por laureles [andres_alvarez002]
-19|6|20261228221453|52|que tal te fue en el parcial? para andres_alvarez002
-7|8|20261228221455|58|te vi en el metro pero no te alcance [andres_hernandez078]
-7|9|20261228221457|43|que haces este finde? [andres_hernandez078]
-22|7|20261228221459|58|quedamos en la biblioteca a las 3 para andres_hernandez078
-8|9|20261228221502|49|manana hay reunion del proyecto [andres_munoz040]
-25|8|20261228221504|52|manana hay reunion del proyecto para andres_munoz040
-9|10|20261228221505|51|me gusto mucho tu foto del viaje [angela_castro041]
-9|11|20261228221506|53|pasa por la cafetera cuando puedas [angela_castro041]
-28|9|20261228221508|55|hoy no alcanzo, manana te escribo para angela_castro041
-10|11|20261228221510|53|cuando vamos a cartagena otra vez? [angela_moreno079]
-31|10|20261228221512|43|que haces este finde? para angela_moreno079
-11|12|20261228221515|59|trae el computador que hay que practicar [angela_vargas003]
-11|13|20261228221518|48|listo, ya acepte la solicitud [angela_vargas003]
-34|11|20261228221520|52|mira las fotos del album nuevo para angela_vargas003
-12|13|20261228221521|49|no olvides entregar el informe [camila_osorio042]
-0|12|20261228221522|51|hoy toca laboratorio a las 10 para camila_osorio042
-13|14|20261228221524|50|hoy no alcanzo, manana te escribo [camila_pena080]
-13|15|20261228221526|42|nos vemos en el bloque 19 [camila_pena080]
-2|13|20261228221529|49|que tal te fue en el parcial? para camila_pena080
-14|15|20261228221532|53|gracias por la ayuda con el codigo [camila_zapata004]
-1|14|20261228221534|55|quedamos en la biblioteca a las 3 para camila_zapata004
-15|16|20261228221535|50|ese algoritmo ya me tiene loco [carlos_delgado037]
-15|17|20261228221536|47|buenas, todo bien por alla? [carlos_delgado037]
-5|15|20261228221539|54|manana hay reunion del proyecto para carlos_delgado037
-16|17|20261228221541|47|vamos al partido el domingo? [carlos_romero075]
-21|16|20261228221542|55|hoy no alcanzo, manana te escribo para carlos_romero075
-17|18|20261228221545|51|te deje un mensaje en el grupo [carolina_arango081]
-17|19|20261228221548|50|hoy toca laboratorio a las 10 [carolina_arango081]
-24|17|20261228221549|45|que haces este finde? para carolina_arango081
-18|19|20261228221550|42|que haces este finde? [carolina_garcia005]
-54|18|20261228221551|54|mira las fotos del album nuevo para carolina_garcia005
-19|20|20261228221553|47|ya arreglamos lo del commit [carolina_gomez043]
-19|21|20261228221555|51|sale un almuerzo por el centro? [carolina_gomez043]
-1|19|20261228221557|52|hoy toca laboratorio a las 10 para carolina_gomez043
-20|21|20261228221600|56|pasa por la cafetera cuando puedas [catalina_jimenez006]
-6|20|20261228221601|54|que tal te fue en el parcial? para catalina_jimenez006
-21|22|20261228221602|52|me salio un error raro en qt [catalina_rodriguez082]
-21|23|20261228221603|54|me prestas el cargador un rato [catalina_rodriguez082]
-11|21|20261228221606|60|quedamos en la biblioteca a las 3 para catalina_rodriguez082
-22|23|20261228221608|50|listo, ya acepte la solicitud [catalina_torres044]
-6|22|20261228221609|55|manana hay reunion del proyecto para catalina_torres044
-23|24|20261228221612|50|mira las fotos del album nuevo [daniel_delgado007]
-23|36|20261228221615|56|estoy en la fila de la fotocopiadora [daniel_delgado007]
-13|23|20261228221617|56|hoy no alcanzo, manana te escribo para daniel_delgado007
-24|39|20261228221618|44|nos vemos en el bloque 19 [daniel_romero045]
-18|24|20261228221619|43|que haces este finde? para daniel_romero045
-25|3|20261228221621|41|estudiaste para el oral? [daniel_ruiz083]
-25|4|20261228221623|51|vamos por un cafe despues de clase [daniel_ruiz083]
-9|25|20261228221624|50|mira las fotos del album nuevo para daniel_ruiz083
-26|7|20261228221627|47|buenas, todo bien por alla? [david_betancur008]
-2|26|20261228221630|52|hoy toca laboratorio a las 10 para david_betancur008
-27|9|20261228221631|49|dale, yo te ayudo con esa parte [david_ortega084]
-27|10|20261228221632|51|quedamos en la biblioteca a las 3 [david_ortega084]
-9|27|20261228221633|50|que tal te fue en el parcial? para david_ortega084
-28|6|20261228221635|45|hoy toca laboratorio a las 10 [david_rios046]
-52|28|20261228221637|52|quedamos en la biblioteca a las 3 para david_rios046
-29|7|20261228221640|45|suerte en la sustentacion [diego_martinez009]
-29|8|20261228221643|49|feliz cumple, te mando abrazo [diego_martinez009]
-95|29|20261228221646|54|manana hay reunion del proyecto para diego_martinez009
-30|12|20261228221647|48|sale un almuerzo por el centro? [diego_mejia085]
-0|30|20261228221648|53|hoy no alcanzo, manana te escribo para diego_mejia085
-31|11|20261228221650|46|ya termine la tarea de poo [diego_quintero047]
-31|12|20261228221652|56|te vi en el metro pero no te alcance [diego_quintero047]
-13|31|20261228221654|44|que haces este finde? para diego_quintero047
-32|13|20261228221657|51|me prestas el cargador un rato [elena_hernandez048]
-1|32|20261228221659|54|mira las fotos del album nuevo para elena_hernandez048
-33|15|20261228221700|46|que tal te fue en el parcial? [elena_lopez086]
-33|25|20261228221701|49|me gusto mucho tu foto del viaje [elena_lopez086]
-9|33|20261228221702|49|hoy toca laboratorio a las 10 para elena_lopez086
-34|14|20261228221704|53|estoy en la fila de la fotocopiadora [elena_munoz010]
-2|34|20261228221707|49|que tal te fue en el parcial? para elena_munoz010
-35|5|20261228221710|57|listo para el parcial de estructuras? [esteban_castro011]
-35|6|20261228221713|60|trae el computador que hay que practicar [esteban_castro011]
-5|35|20261228221716|56|quedamos en la biblioteca a las 3 para esteban_castro011
-36|0|20261228221717|52|vamos por un cafe despues de clase [esteban_diaz087]
-0|36|20261228221718|52|manana hay reunion del proyecto para esteban_diaz087
-37|59|20261228221720|56|me pasas los apuntes de informatica? [esteban_moreno049]
-37|88|20261228221722|53|hoy no alcanzo, manana te escribo [esteban_moreno049]
-28|37|20261228221724|56|hoy no alcanzo, manana te escribo para esteban_moreno049
-38|98|20261228221727|53|quedamos en la biblioteca a las 3 [felipe_navarro088]
-49|38|20261228221729|44|que haces este finde? para felipe_navarro088
-39|0|20261228221730|49|ya subieron las notas del quiz [felipe_osorio012]
-39|1|20261228221731|49|ese algoritmo ya me tiene loco [felipe_osorio012]
-0|39|20261228221732|52|mira las fotos del album nuevo para felipe_osorio012
-40|0|20261228221734|46|feliz cumple, te mando abrazo [felipe_pena050]
-0|40|20261228221735|49|hoy toca laboratorio a las 10 para felipe_pena050
-41|1|20261228221738|51|esta lloviendo feo por laureles [gabriel_arango051]
-41|2|20261228221741|50|te deje un mensaje en el grupo [gabriel_arango051]
-3|41|20261228221742|52|que tal te fue en el parcial? para gabriel_arango051
-42|12|20261228221743|57|te vi en el metro pero no te alcance [gabriel_cardona089]
-0|42|20261228221744|57|quedamos en la biblioteca a las 3 para gabriel_cardona089
-43|84|20261228221746|50|manana hay reunion del proyecto [gabriel_gomez013]
-43|0|20261228221748|46|ya arreglamos lo del commit [gabriel_gomez013]
-31|43|20261228221750|53|manana hay reunion del proyecto para gabriel_gomez013
-44|0|20261228221753|55|me gusto mucho tu foto del viaje [isabella_restrepo090]
-0|44|20261228221754|59|hoy no alcanzo, manana te escribo para isabella_restrepo090
-45|71|20261228221755|58|cuando vamos a cartagena otra vez? [isabella_rodriguez052]
-45|76|20261228221756|52|me salio un error raro en qt [isabella_rodriguez052]
-4|45|20261228221758|48|que haces este finde? para isabella_rodriguez052
-46|3|20261228221800|61|trae el computador que hay que practicar [isabella_torres014]
-44|46|20261228221803|54|mira las fotos del album nuevo para isabella_torres014
-47|3|20261228221806|48|no olvides entregar el informe [juan_ramirez091]
-47|4|20261228221809|48|mira las fotos del album nuevo [juan_ramirez091]
-56|47|20261228221812|50|hoy toca laboratorio a las 10 para juan_ramirez091
-48|1|20261228221813|50|hoy no alcanzo, manana te escribo [juan_romero015]
-1|48|20261228221815|49|que tal te fue en el parcial? para juan_romero015
-49|31|20261228221817|49|gracias por la ayuda con el codigo [juan_ruiz053]
-49|38|20261228221819|39|estudiaste para el oral? [juan_ruiz053]
-4|49|20261228221821|51|quedamos en la biblioteca a las 3 para juan_ruiz053
-50|37|20261228221824|50|ese algoritmo ya me tiene loco [julian_alvarez092]
-47|50|20261228221827|54|manana hay reunion del proyecto para julian_alvarez092
-51|88|20261228221828|47|vamos al partido el domingo? [julian_ortega054]
-51|89|20261228221829|50|dale, yo te ayudo con esa parte [julian_ortega054]
-99|51|20261228221830|55|hoy no alcanzo, manana te escribo para julian_ortega054
-52|18|20261228221832|47|te deje un mensaje en el grupo [julian_rios016]
-18|52|20261228221833|41|que haces este finde? para julian_rios016
-53|25|20261228221836|39|que haces este finde? [kevin_castro071]
-53|27|20261228221839|43|suerte en la sustentacion [kevin_castro071]
-4|53|20261228221841|51|mira las fotos del album nuevo para kevin_castro071
-54|97|20261228221842|45|ya arreglamos lo del commit [kevin_vargas033]
-88|54|20261228221844|50|hoy toca laboratorio a las 10 para kevin_vargas033
-55|2|20261228221846|51|pasa por la cafetera cuando puedas [laura_mejia055]
-55|36|20261228221848|43|ya termine la tarea de poo [laura_mejia055]
-2|55|20261228221851|49|que tal te fue en el parcial? para laura_mejia055
-56|6|20261228221854|48|me salio un error raro en qt [laura_quintero017]
-78|56|20261228221855|56|quedamos en la biblioteca a las 3 para laura_quintero017
-57|37|20261228221856|47|listo, ya acepte la solicitud [laura_vargas093]
-57|53|20261228221857|47|que tal te fue en el parcial? [laura_vargas093]
-59|57|20261228221900|52|manana hay reunion del proyecto para laura_vargas093
-58|67|20261228221902|51|mira las fotos del album nuevo [lucia_hernandez018]
-94|58|20261228221904|57|hoy no alcanzo, manana te escribo para lucia_hernandez018
-59|57|20261228221907|42|nos vemos en el bloque 19 [lucia_lopez056]
-59|86|20261228221910|54|listo para el parcial de estructuras? [lucia_lopez056]
-37|59|20261228221912|41|que haces este finde? para lucia_lopez056
-60|64|20261228221913|42|estudiaste para el oral? [lucia_zapata094]
-69|60|20261228221914|51|mira las fotos del album nuevo para lucia_zapata094
-61|90|20261228221916|43|buenas, todo bien por alla? [luisa_diaz057]
-61|96|20261228221918|52|me pasas los apuntes de informatica? [luisa_diaz057]
-7|61|20261228221920|48|hoy toca laboratorio a las 10 para luisa_diaz057
-62|80|20261228221923|49|dale, yo te ayudo con esa parte [luisa_garcia095]
-68|62|20261228221926|50|que tal te fue en el parcial? para luisa_garcia095
-63|14|20261228221927|47|hoy toca laboratorio a las 10 [luisa_moreno019]
-63|29|20261228221928|48|ya subieron las notas del quiz [luisa_moreno019]
-14|63|20261228221931|54|quedamos en la biblioteca a las 3 para luisa_moreno019
-64|71|20261228221933|46|suerte en la sustentacion [manuela_jimenez096]
-25|64|20261228221935|55|manana hay reunion del proyecto para manuela_jimenez096
-65|66|20261228221938|52|sale un almuerzo por el centro? [manuela_navarro058]
-65|73|20261228221941|52|esta lloviendo feo por laureles [manuela_navarro058]
-66|65|20261228221942|57|hoy no alcanzo, manana te escribo para manuela_navarro058
-66|46|20261228221943|44|ya termine la tarea de poo [manuela_pena020]
-72|66|20261228221944|42|que haces este finde? para manuela_pena020
-67|53|20261228221946|48|me prestas el cargador un rato [maria_arango021]
-67|58|20261228221948|49|manana hay reunion del proyecto [maria_arango021]
-71|67|20261228221951|51|mira las fotos del album nuevo para maria_arango021
-68|54|20261228221954|48|que tal te fue en el parcial? [maria_cardona059]
-40|68|20261228221956|51|hoy toca laboratorio a las 10 para maria_cardona059
-69|71|20261228221957|55|estoy en la fila de la fotocopiadora [maria_delgado097]
-69|79|20261228221958|53|cuando vamos a cartagena otra vez? [maria_delgado097]
-71|69|20261228222001|51|que tal te fue en el parcial? para maria_delgado097
-70|77|20261228222003|57|listo para el parcial de estructuras? [mateo_betancur098]
-16|70|20261228222005|56|quedamos en la biblioteca a las 3 para mateo_betancur098
-71|95|20261228222008|54|vamos por un cafe despues de clase [mateo_restrepo060]
-71|4|20261228222011|50|no olvides entregar el informe [mateo_restrepo060]
-67|71|20261228222013|54|manana hay reunion del proyecto para mateo_restrepo060
-72|7|20261228222014|57|me pasas los apuntes de informatica? [mateo_rodriguez022]
-7|72|20261228222016|57|hoy no alcanzo, manana te escribo para mateo_rodriguez022
-73|20|20261228222018|52|quedamos en la biblioteca a las 3 [miguel_osorio072]
-73|43|20261228222020|53|gracias por la ayuda con el codigo [miguel_osorio072]
-57|73|20261228222021|43|que haces este finde? para miguel_osorio072
-74|82|20261228222024|49|ya subieron las notas del quiz [miguel_zapata034]
-36|74|20261228222025|52|mira las fotos del album nuevo para miguel_zapata034
-75|73|20261228222026|51|feliz cumple, te mando abrazo [natalia_martinez099]
-75|86|20261228222027|50|vamos al partido el domingo? [natalia_martinez099]
-73|75|20261228222029|54|hoy toca laboratorio a las 10 para natalia_martinez099
-76|63|20261228222031|52|esta lloviendo feo por laureles [natalia_ramirez061]
-89|76|20261228222034|53|que tal te fue en el parcial? para natalia_ramirez061
-77|94|20261228222037|54|te vi en el metro pero no te alcance [natalia_ruiz023]
-77|36|20261228222040|39|que haces este finde? [natalia_ruiz023]
-57|77|20261228222041|54|quedamos en la biblioteca a las 3 para natalia_ruiz023
-78|39|20261228222042|52|manana hay reunion del proyecto [nicolas_alvarez062]
-39|78|20261228222043|55|manana hay reunion del proyecto para nicolas_alvarez062
-79|72|20261228222045|52|me gusto mucho tu foto del viaje [nicolas_ortega024]
-79|34|20261228222047|54|pasa por la cafetera cuando puedas [nicolas_ortega024]
-49|79|20261228222049|56|hoy no alcanzo, manana te escribo para nicolas_ortega024
-80|47|20261228222052|53|cuando vamos a cartagena otra vez? [oscar_alvarez032]
-41|80|20261228222055|43|que haces este finde? para oscar_alvarez032
-81|24|20261228222056|57|trae el computador que hay que practicar [oscar_munoz070]
-81|17|20261228222057|46|listo, ya acepte la solicitud [oscar_munoz070]
-24|81|20261228222058|50|mira las fotos del album nuevo para oscar_munoz070
-82|65|20261228222100|47|no olvides entregar el informe [paula_mejia025]
-65|82|20261228222103|49|hoy toca laboratorio a las 10 para paula_mejia025
-83|94|20261228222106|51|hoy no alcanzo, manana te escribo [paula_vargas063]
-83|15|20261228222109|43|nos vemos en el bloque 19 [paula_vargas063]
-55|83|20261228222111|50|que tal te fue en el parcial? para paula_vargas063
-84|1|20261228222112|54|gracias por la ayuda con el codigo [santiago_lopez026]
-1|84|20261228222114|56|quedamos en la biblioteca a las 3 para santiago_lopez026
-85|33|20261228222116|51|ese algoritmo ya me tiene loco [santiago_zapata064]
-85|58|20261228222118|48|buenas, todo bien por alla? [santiago_zapata064]
-97|85|20261228222120|55|manana hay reunion del proyecto para santiago_zapata064
-86|59|20261228222123|45|vamos al partido el domingo? [sara_garcia035]
-73|86|20261228222125|53|hoy no alcanzo, manana te escribo para sara_garcia035
-87|69|20261228222126|46|te deje un mensaje en el grupo [sara_gomez073]
-87|59|20261228222127|45|hoy toca laboratorio a las 10 [sara_gomez073]
-69|87|20261228222128|40|que haces este finde? para sara_gomez073
-88|54|20261228222130|41|que haces este finde? [sebastian_diaz027]
-57|88|20261228222131|53|mira las fotos del album nuevo para sebastian_diaz027
-89|51|20261228222134|49|ya arreglamos lo del commit [sebastian_garcia065]
-89|76|20261228222137|53|sale un almuerzo por el centro? [sebastian_garcia065]
-98|89|20261228222140|54|hoy toca laboratorio a las 10 para sebastian_garcia065
-90|8|20261228222141|53|pasa por la cafetera cuando puedas [sofia_jimenez066]
-8|90|20261228222144|51|que tal te fue en el parcial? para sofia_jimenez066
-91|96|20261228222146|47|me salio un error raro en qt [sofia_navarro028]
-91|22|20261228222148|49|me prestas el cargador un rato [sofia_navarro028]
-54|91|20261228222149|55|quedamos en la biblioteca a las 3 para sofia_navarro028
-92|29|20261228222152|50|listo, ya acepte la solicitud [tatiana_jimenez036]
-15|92|20261228222153|55|manana hay reunion del proyecto para tatiana_jimenez036
-93|80|20261228222154|50|mira las fotos del album nuevo [tatiana_torres074]
-93|97|20261228222155|56|estoy en la fila de la fotocopiadora [tatiana_torres074]
-98|93|20261228222158|56|hoy no alcanzo, manana te escribo para tatiana_torres074
-94|83|20261228222200|48|nos vemos en el bloque 19 [valentina_cardona029]
-70|94|20261228222202|47|que haces este finde? para valentina_cardona029
-95|28|20261228222205|47|estudiaste para el oral? [valentina_delgado067]
-95|29|20261228222208|57|vamos por un cafe despues de clase [valentina_delgado067]
-28|95|20261228222210|56|mira las fotos del album nuevo para valentina_delgado067
-96|91|20261228222211|49|buenas, todo bien por alla? [valeria_betancur068]
-39|96|20261228222212|54|hoy toca laboratorio a las 10 para valeria_betancur068
-97|54|20261228222214|53|dale, yo te ayudo con esa parte [valeria_restrepo030]
-97|56|20261228222216|55|quedamos en la biblioteca a las 3 [valeria_restrepo030]
-85|97|20261228222218|54|que tal te fue en el parcial? para valeria_restrepo030
-98|93|20261228222221|51|hoy toca laboratorio a las 10 [vanessa_martinez069]
-75|98|20261228222222|58|quedamos en la biblioteca a las 3 para vanessa_martinez069
-99|20|20261228222223|46|suerte en la sustentacion [vanessa_ramirez031]
-99|51|20261228222224|50|feliz cumple, te mando abrazo [vanessa_ramirez031]
-20|99|20261228222227|55|manana hay reunion del proyecto para vanessa_ramirez031
+14|27|20260601184112|53|ya termine la tarea de poo para david_ortega084 #9563
+27|12|20260601224545|53|suerte en la sustentacion para camila_osorio042 #6004
+18|74|20260602111734|62|gracias por la ayuda con el codigo para miguel_zapata034 #7293
+50|3|20260602144405|57|dale, yo te ayudo con esa parte [julian_alvarez092 #50-0]
+21|23|20260603091444|63|quedamos en la biblioteca a las 3 [catalina_rodriguez082 #21-1]
+12|13|20260603191218|52|ya arreglamos lo del commit [camila_osorio042 #12-0]
+80|89|20260603194836|65|gracias por la ayuda con el codigo para sebastian_garcia065 #6896
+6|15|20260604071143|59|me prestas el cargador un rato para carlos_delgado037 #4341
+35|5|20260604085423|62|te vi en el metro pero no te alcance [esteban_castro011 #35-0]
+55|59|20260604154832|63|listo para el parcial de estructuras? para lucia_lopez056 #1794
+7|8|20260604210427|55|me salio un error raro en qt [andres_hernandez078 #7-0]
+28|79|20260605115659|56|buenas, todo bien por alla? para nicolas_ortega024 #6806
+43|74|20260605164342|52|buenas, todo bien por alla? [gabriel_gomez013 #43-1]
+30|56|20260605222027|51|estudiaste para el oral? para laura_quintero017 #74
+9|34|20260606183817|59|hoy no alcanzo, manana te escribo para elena_munoz010 #8378
+23|17|20260606225430|60|ya subieron las notas del quiz para carolina_arango081 #1800
+21|49|20260608113239|49|suerte en la sustentacion para juan_ruiz053 #9079
+0|1|20260609170053|60|dale, yo te ayudo con esa parte [alejandro_betancur038 #0-0]
+48|80|20260610085653|53|te deje un mensaje en el grupo [juan_romero015 #48-0]
+15|17|20260611092921|60|cuando vamos a cartagena otra vez? [carlos_delgado037 #15-1]
+8|14|20260612081052|52|estudiaste para el oral? para camila_zapata004 #7169
+27|3|20260612150823|60|me prestas el cargador un rato para andrea_martinez039 #6372
+67|50|20260612184231|55|dale, yo te ayudo con esa parte [maria_arango021 #67-0]
+51|2|20260613143613|65|estoy en la fila de la fotocopiadora para alejandro_rios076 #2294
+13|14|20260613172038|56|hoy no alcanzo, manana te escribo [camila_pena080 #13-0]
+75|53|20260613181835|54|ya termine la tarea de poo [natalia_martinez099 #75-0]
+1|3|20260613185959|59|te deje un mensaje en el grupo [alejandro_restrepo000 #1-1]
+86|17|20260613191016|51|vamos al partido el domingo? [sara_garcia035 #86-0]
+93|64|20260613193156|59|feliz cumple, te mando abrazo para manuela_jimenez096 #7779
+74|63|20260614081803|63|estoy en la fila de la fotocopiadora para luisa_moreno019 #3712
+24|55|20260614121417|59|vamos por un cafe despues de clase [daniel_romero045 #24-0]
+29|6|20260614151905|56|ese algoritmo ya me tiene loco [diego_martinez009 #29-0]
+9|11|20260614165616|57|quedamos en la biblioteca a las 3 [angela_castro041 #9-1]
+31|11|20260614175519|58|me gusto mucho tu foto del viaje [diego_quintero047 #31-0]
+37|50|20260615111327|56|me prestas el cargador un rato [esteban_moreno049 #37-0]
+79|36|20260615191237|57|te deje un mensaje en el grupo para esteban_diaz087 #1179
+14|33|20260616204755|62|me pasas los apuntes de informatica? para elena_lopez086 #7263
+77|73|20260617092826|57|feliz cumple, te mando abrazo para miguel_osorio072 #2577
+59|55|20260617161722|56|quedamos en la biblioteca a las 3 [lucia_lopez056 #59-1]
+1|2|20260618165354|50|que haces este finde? [alejandro_restrepo000 #1-0]
+66|6|20260618173125|58|gracias por la ayuda con el codigo [manuela_pena020 #66-0]
+32|13|20260619074731|57|ya subieron las notas del quiz [elena_hernandez048 #32-0]
+61|87|20260619114945|58|quedamos en la biblioteca a las 3 para sara_gomez073 #1446
+11|12|20260619141017|55|no olvides entregar el informe [angela_vargas003 #11-0]
+25|0|20260621071608|67|pasa por la cafetera cuando puedas para alejandro_betancur038 #2255
+19|11|20260621082619|59|dale, yo te ayudo con esa parte para angela_vargas003 #1256
+46|2|20260621190100|63|me pasas los apuntes de informatica? [isabella_torres014 #46-0]
+53|3|20260621194102|55|sale un almuerzo por el centro? [kevin_castro071 #53-1]
+89|16|20260622143740|58|mira las fotos del album nuevo [sebastian_garcia065 #89-1]
+15|16|20260624103451|51|nos vemos en el bloque 19 [carlos_delgado037 #15-0]
+59|37|20260624112320|57|vamos por un cafe despues de clase [lucia_lopez056 #59-0]
+74|18|20260624162352|61|estoy en la fila de la fotocopiadora [miguel_zapata034 #74-0]
+10|21|20260624172138|70|listo para el parcial de estructuras? para catalina_rodriguez082 #4411
+49|1|20260624184139|51|ya subieron las notas del quiz [juan_ruiz053 #49-1]
+64|18|20260625105020|63|estoy en la fila de la fotocopiadora [manuela_jimenez096 #64-0]
+30|8|20260625143134|56|hoy toca laboratorio a las 10 para andres_munoz040 #9059
+78|20|20260625183500|67|trae el computador que hay que practicar [nicolas_alvarez062 #78-0]
+17|47|20260628092116|64|listo para el parcial de estructuras? para juan_ramirez091 #8745
+14|15|20260628171123|59|cuando vamos a cartagena otra vez? [camila_zapata004 #14-0]
+96|97|20260628222241|58|ese algoritmo ya me tiene loco [valeria_betancur068 #96-0]
+65|54|20260628222246|48|que haces este finde? para kevin_vargas033 #2825
+71|21|20260629072513|60|cuando vamos a cartagena otra vez? [mateo_restrepo060 #71-1]
+19|93|20260630175430|69|trae el computador que hay que practicar para tatiana_torres074 #1597
+41|5|20260630180114|59|quedamos en la biblioteca a las 3 [gabriel_arango051 #41-0]
+4|43|20260701150825|58|ese algoritmo ya me tiene loco para gabriel_gomez013 #3310
+49|97|20260701190201|51|ya subieron las notas del quiz [juan_ruiz053 #49-0]
+3|5|20260702094457|56|ya subieron las notas del quiz [andrea_martinez039 #3-1]
+18|67|20260702111626|55|que tal te fue en el parcial? para maria_arango021 #335
+22|99|20260703220333|60|te deje un mensaje en el grupo para vanessa_ramirez031 #8021
+65|54|20260704093113|61|gracias por la ayuda con el codigo [manuela_navarro058 #65-1]
+43|29|20260704120607|51|ya termine la tarea de poo [gabriel_gomez013 #43-0]
+23|25|20260705182706|55|que tal te fue en el parcial? [daniel_delgado007 #23-1]
+87|64|20260706155722|53|dale, yo te ayudo con esa parte [sara_gomez073 #87-0]
+4|31|20260708102107|58|que tal te fue en el parcial? para diego_quintero047 #8961
+65|52|20260708103550|57|te deje un mensaje en el grupo [manuela_navarro058 #65-0]
+0|35|20260708111042|57|hoy toca laboratorio a las 10 para esteban_castro011 #889
+79|28|20260709103107|55|hoy toca laboratorio a las 10 [nicolas_ortega024 #79-1]
+14|18|20260709175737|58|me salio un error raro en qt para carolina_garcia005 #7537
+81|4|20260709190333|53|te deje un mensaje en el grupo [oscar_munoz070 #81-0]
+0|39|20260709221823|58|me prestas el cargador un rato para felipe_osorio012 #1686
+7|25|20260710134302|61|estoy en la fila de la fotocopiadora para daniel_ruiz083 #635
+11|13|20260710162408|52|buenas, todo bien por alla? [angela_vargas003 #11-1]
+8|9|20260710183125|57|listo, ya acepte la solicitud para angela_castro041 #1268
+70|41|20260710200659|59|no olvides entregar el informe para gabriel_arango051 #8275
+20|90|20260711114753|58|mira las fotos del album nuevo para sofia_jimenez066 #9511
+70|54|20260712110727|57|sale un almuerzo por el centro? [mateo_betancur098 #70-0]
+39|83|20260713115637|61|gracias por la ayuda con el codigo para paula_vargas063 #2603
+9|26|20260713155146|59|no olvides entregar el informe para david_betancur008 #5474
+0|1|20260713173153|63|me prestas el cargador un rato para alejandro_restrepo000 #9338
+28|85|20260713202833|60|ya subieron las notas del quiz para santiago_zapata064 #2303
+96|98|20260715212155|59|me salio un error raro en qt para vanessa_martinez069 #9050
+93|28|20260716072413|54|vamos al partido el domingo? [tatiana_torres074 #93-1]
+21|22|20260716074700|64|pasa por la cafetera cuando puedas [catalina_rodriguez082 #21-0]
+46|4|20260717181759|51|que haces este finde? para andrea_quintero077 #1844
+49|55|20260718115955|62|te vi en el metro pero no te alcance para laura_mejia055 #7871
+36|3|20260719084106|54|te deje un mensaje en el grupo [esteban_diaz087 #36-0]
+20|71|20260719143519|58|feliz cumple, te mando abrazo para mateo_restrepo060 #1584
+63|45|20260719164324|45|que haces este finde? [luisa_moreno019 #63-0]
+51|5|20260721171210|53|me salio un error raro en qt [julian_ortega054 #51-1]
+45|2|20260722075531|59|hoy toca laboratorio a las 10 [isabella_rodriguez052 #45-0]
+33|13|20260723082524|63|trae el computador que hay que practicar [elena_lopez086 #33-1]
+62|45|20260723124142|60|te vi en el metro pero no te alcance [luisa_garcia095 #62-0]
+46|37|20260724094255|68|trae el computador que hay que practicar para esteban_moreno049 #384
+28|4|20260724200402|53|esta lloviendo feo por laureles [david_rios046 #28-0]
+87|76|20260724205158|52|te deje un mensaje en el grupo [sara_gomez073 #87-1]
+97|62|20260725170721|57|ese algoritmo ya me tiene loco para luisa_garcia095 #2350
+55|75|20260725183937|61|ese algoritmo ya me tiene loco para natalia_martinez099 #7863
+77|53|20260726200034|56|que tal te fue en el parcial? para kevin_castro071 #8368
+78|20|20260727105844|61|te deje un mensaje en el grupo para catalina_jimenez006 #5346
+17|10|20260728111801|57|listo, ya acepte la solicitud para angela_moreno079 #2945
+7|32|20260728154347|55|nos vemos en el bloque 19 para elena_hernandez048 #3900
+85|65|20260728154425|52|nos vemos en el bloque 19 [santiago_zapata064 #85-0]
+1|61|20260728224941|59|cuando vamos a cartagena otra vez? para luisa_diaz057 #1426
+27|5|20260730091452|54|te deje un mensaje en el grupo [david_ortega084 #27-0]
+76|87|20260730102129|58|dale, yo te ayudo con esa parte [natalia_ramirez061 #76-0]
+30|11|20260730110727|57|pasa por la cafetera cuando puedas [diego_mejia085 #30-0]
+14|97|20260731165955|62|me gusto mucho tu foto del viaje para valeria_restrepo030 #402
+1|51|20260731215945|55|ya arreglamos lo del commit para julian_ortega054 #6671
+1|0|20260801100000|61|listo para el parcial de estructuras? (alejandro_restrepo000)
+0|29|20260801103931|60|sale un almuerzo por el centro? para diego_martinez009 #1463
+82|84|20260801161008|51|vamos al partido el domingo? [paula_mejia025 #82-0]
+57|91|20260802125324|61|gracias por la ayuda con el codigo para sofia_navarro028 #217
+2|0|20260803110713|34|vamos por un cafe despues de clase
+7|9|20260803124118|52|nos vemos en el bloque 19 [andres_hernandez078 #7-1]
+84|82|20260803190023|66|trae el computador que hay que practicar para paula_mejia025 #5814
+74|69|20260804074539|58|no olvides entregar el informe para maria_delgado097 #8153
+43|95|20260804074652|62|ese algoritmo ya me tiene loco para valentina_delgado067 #8448
+9|10|20260804091307|55|manana hay reunion del proyecto [angela_castro041 #9-0]
+61|38|20260804102600|59|listo para el parcial de estructuras? [luisa_diaz057 #61-0]
+80|89|20260804220036|54|listo, ya acepte la solicitud [oscar_alvarez032 #80-0]
+3|0|20260805121426|36|me pasas los apuntes de informatica?
+4|0|20260807132139|33|quedamos en la biblioteca a las 3
+80|58|20260807145253|55|nos vemos en el bloque 19 para lucia_hernandez018 #2432
+2|3|20260807165706|59|cuando vamos a cartagena otra vez? [alejandro_rios076 #2-0]
+97|14|20260807170440|49|que haces este finde? [valeria_restrepo030 #97-0]
+91|46|20260807172645|55|te deje un mensaje en el grupo [sofia_navarro028 #91-1]
+68|21|20260809071358|61|me pasas los apuntes de informatica? [maria_cardona059 #68-0]
+84|66|20260809124956|55|hoy toca laboratorio a las 10 [santiago_lopez026 #84-0]
+5|0|20260809142852|50|ya subieron las notas del quiz (andrea_ramirez001)
+67|55|20260809202037|49|suerte en la sustentacion [maria_arango021 #67-1]
+46|6|20260810212035|69|trae el computador que hay que practicar para andres_alvarez002 #5577
+61|40|20260811131134|59|hoy no alcanzo, manana te escribo para felipe_pena050 #3255
+6|0|20260811153505|29|feliz cumple, te mando abrazo
+13|15|20260811164318|53|ese algoritmo ya me tiene loco [camila_pena080 #13-1]
+44|4|20260812123728|57|vamos al partido el domingo? [isabella_restrepo090 #44-0]
+24|19|20260813074426|59|me prestas el cargador un rato para carolina_gomez043 #1134
+7|0|20260813164218|31|esta lloviendo feo por laureles
+4|48|20260813164343|56|ya subieron las notas del quiz para juan_romero015 #3007
+2|50|20260814131325|59|te deje un mensaje en el grupo para julian_alvarez092 #7328
+87|60|20260814204402|58|dale, yo te ayudo con esa parte para lucia_zapata094 #4328
+57|34|20260815140119|53|que tal te fue en el parcial? [laura_vargas093 #57-0]
+8|0|20260815174931|36|te vi en el metro pero no te alcance
+9|0|20260817105644|50|manana hay reunion del proyecto (angela_castro041)
+40|88|20260818084424|60|manana hay reunion del proyecto para sebastian_diaz027 #9722
+10|0|20260819110357|32|me gusto mucho tu foto del viaje
+45|3|20260819135845|64|vamos por un cafe despues de clase [isabella_rodriguez052 #45-1]
+60|9|20260820075634|54|ya subieron las notas del quiz [lucia_zapata094 #60-0]
+35|17|20260820085358|57|dale, yo te ayudo con esa parte [esteban_castro011 #35-1]
+88|84|20260820150500|58|que tal te fue en el parcial? para santiago_lopez026 #9556
+69|59|20260820162610|55|te deje un mensaje en el grupo [maria_delgado097 #69-0]
+4|5|20260821102107|60|pasa por la cafetera cuando puedas [andrea_quintero077 #4-0]
+11|0|20260821121010|34|cuando vamos a cartagena otra vez?
+83|33|20260822122507|52|me salio un error raro en qt [paula_vargas063 #83-1]
+73|26|20260822210252|53|me salio un error raro en qt [miguel_osorio072 #73-1]
+33|12|20260822213814|59|me pasas los apuntes de informatica? [elena_lopez086 #33-0]
+12|0|20260823131723|40|trae el computador que hay que practicar
+5|7|20260824073635|55|mira las fotos del album nuevo [andrea_ramirez001 #5-1]
+13|0|20260825142436|47|no olvides entregar el informe (camila_pena080)
+14|0|20260827153149|33|hoy no alcanzo, manana te escribo
+54|70|20260827162941|59|ya subieron las notas del quiz para mateo_betancur098 #8174
+8|13|20260828175036|57|manana hay reunion del proyecto para camila_pena080 #9237
+2|44|20260828205831|69|listo para el parcial de estructuras? para isabella_restrepo090 #9909
+91|57|20260829160915|58|manana hay reunion del proyecto para laura_vargas093 #3778
+15|0|20260829163802|34|gracias por la ayuda con el codigo
+79|52|20260829185815|59|hoy no alcanzo, manana te escribo para julian_rios016 #6754
+91|77|20260830073938|50|estudiaste para el oral? para natalia_ruiz023 #254
+18|19|20260830115204|57|mira las fotos del album nuevo [carolina_garcia005 #18-0]
+2|38|20260830200300|58|listo, ya acepte la solicitud para felipe_navarro088 #9173
+63|69|20260831093224|45|que haces este finde? [luisa_moreno019 #63-1]
+85|66|20260831152600|54|ya arreglamos lo del commit [santiago_zapata064 #85-1]
+16|0|20260831174515|30|ese algoritmo ya me tiene loco
+8|30|20260831181735|57|sale un almuerzo por el centro? para diego_mejia085 #6404
+58|78|20260831202416|60|ese algoritmo ya me tiene loco para nicolas_alvarez062 #7134
+2|16|20260901163254|57|listo, ya acepte la solicitud para carlos_romero075 #2443
+17|0|20260902105228|49|vamos al partido el domingo? (carolina_arango081)
+41|27|20260902145722|62|me pasas los apuntes de informatica? [gabriel_arango051 #41-1]
+93|23|20260903183941|57|esta lloviendo feo por laureles [tatiana_torres074 #93-0]
+18|0|20260904115941|30|te deje un mensaje en el grupo
+19|0|20260906120654|21|que haces este finde?
+19|21|20260906180107|51|suerte en la sustentacion [carolina_gomez043 #19-1]
+47|4|20260906211215|57|quedamos en la biblioteca a las 3 [juan_ramirez091 #47-0]
+17|19|20260906213233|57|ya subieron las notas del quiz [carolina_arango081 #17-1]
+81|86|20260907115958|57|cuando vamos a cartagena otra vez? [oscar_munoz070 #81-1]
+73|19|20260907153442|56|esta lloviendo feo por laureles [miguel_osorio072 #73-0]
+29|7|20260907181808|54|vamos al partido el domingo? [diego_martinez009 #29-1]
+95|90|20260908093619|63|gracias por la ayuda con el codigo [valentina_delgado067 #95-0]
+47|68|20260908104507|58|mira las fotos del album nuevo para maria_cardona059 #5443
+20|0|20260908131307|27|ya arreglamos lo del commit
+21|0|20260910142020|58|pasa por la cafetera cuando puedas (catalina_rodriguez082)
+99|94|20260910192447|61|cuando vamos a cartagena otra vez? [vanessa_ramirez031 #99-0]
+3|24|20260911130117|68|trae el computador que hay que practicar para daniel_romero045 #9873
+22|0|20260912152733|28|me salio un error raro en qt
+23|0|20260914163446|29|listo, ya acepte la solicitud
+44|80|20260914195958|58|ese algoritmo ya me tiene loco para oscar_alvarez032 #9238
+20|21|20260915094726|62|cuando vamos a cartagena otra vez? [catalina_jimenez006 #20-0]
+58|80|20260915160333|59|me gusto mucho tu foto del viaje [lucia_hernandez018 #58-0]
+62|42|20260916102830|60|me prestas el cargador un rato para gabriel_cardona089 #5234
+8|9|20260916110912|53|ese algoritmo ya me tiene loco [andres_munoz040 #8-0]
+92|7|20260916130137|61|mira las fotos del album nuevo para andres_hernandez078 #5739
+97|20|20260916132647|58|no olvides entregar el informe [valeria_restrepo030 #97-1]
+24|0|20260916174159|30|mira las fotos del album nuevo
+38|5|20260917123320|59|quedamos en la biblioteca a las 3 [felipe_navarro088 #38-0]
+77|10|20260917154424|55|sale un almuerzo por el centro? [natalia_ruiz023 #77-1]
+91|26|20260917190447|52|buenas, todo bien por alla? [sofia_navarro028 #91-0]
+25|0|20260918104812|42|nos vemos en el bloque 19 (daniel_ruiz083)
+6|7|20260918115219|57|me gusto mucho tu foto del viaje [andres_alvarez002 #6-0]
+47|17|20260918124051|51|ya arreglamos lo del commit [juan_ramirez091 #47-1]
+53|2|20260918142940|60|me pasas los apuntes de informatica? [kevin_castro071 #53-0]
+94|86|20260918165356|59|te deje un mensaje en el grupo [valentina_cardona029 #94-0]
+55|29|20260918223921|56|quedamos en la biblioteca a las 3 [laura_mejia055 #55-1]
+10|11|20260918224205|54|feliz cumple, te mando abrazo [angela_moreno079 #10-0]
+92|14|20260919092939|55|vamos al partido el domingo? [tatiana_jimenez036 #92-0]
+79|11|20260919122316|51|nos vemos en el bloque 19 [nicolas_ortega024 #79-0]
+40|4|20260919210750|52|hoy toca laboratorio a las 10 [felipe_pena050 #40-0]
+86|94|20260920105534|53|que haces este finde? para valentina_cardona029 #8148
+26|0|20260920115525|24|estudiaste para el oral?
+56|95|20260920144123|59|quedamos en la biblioteca a las 3 [laura_quintero017 #56-0]
+90|95|20260920183434|54|listo, ya acepte la solicitud [sofia_jimenez066 #90-0]
+83|65|20260920214631|63|gracias por la ayuda con el codigo para manuela_navarro058 #954
+95|7|20260921102221|66|listo para el parcial de estructuras? [valentina_delgado067 #95-1]
+88|84|20260922110638|60|vamos por un cafe despues de clase [sebastian_diaz027 #88-0]
+27|0|20260922120238|27|buenas, todo bien por alla?
+51|4|20260922223418|59|pasa por la cafetera cuando puedas [julian_ortega054 #51-0]
+39|21|20260923130933|56|sale un almuerzo por el centro? [felipe_osorio012 #39-0]
+42|15|20260923134127|67|trae el computador que hay que practicar [gabriel_cardona089 #42-0]
+34|10|20260923180329|54|esta lloviendo feo por laureles [elena_munoz010 #34-0]
+16|5|20260924110434|59|no olvides entregar el informe para andrea_ramirez001 #6530
+28|0|20260924130951|31|dale, yo te ayudo con esa parte
+83|90|20260924211613|60|te vi en el metro pero no te alcance [paula_vargas063 #83-0]
+89|80|20260925085632|52|estudiaste para el oral? [sebastian_garcia065 #89-0]
+19|20|20260925095445|57|manana hay reunion del proyecto [carolina_gomez043 #19-0]
+57|91|20260925113722|60|estoy en la fila de la fotocopiadora [laura_vargas093 #57-1]
+17|96|20260925113808|59|me salio un error raro en qt para valeria_betancur068 #7942
+55|24|20260925125048|53|me prestas el cargador un rato [laura_mejia055 #55-0]
+25|3|20260925214202|49|ya termine la tarea de poo [daniel_ruiz083 #25-1]
+71|20|20260925223045|54|me salio un error raro en qt [mateo_restrepo060 #71-0]
+90|45|20260925223305|64|sale un almuerzo por el centro? para isabella_rodriguez052 #5122
+94|86|20260926084957|54|vamos al partido el domingo? para sara_garcia035 #1435
+23|24|20260926095346|57|manana hay reunion del proyecto [daniel_delgado007 #23-0]
+29|0|20260926141604|49|hoy toca laboratorio a las 10 (diego_martinez009)
+5|6|20260926143939|54|que tal te fue en el parcial? [andrea_ramirez001 #5-0]
+90|92|20260926154340|58|me salio un error raro en qt para tatiana_jimenez036 #7714
+30|0|20260928152317|25|suerte en la sustentacion
+83|72|20260929083512|64|vamos por un cafe despues de clase para mateo_rodriguez022 #7825
+25|2|20260929205511|59|te vi en el metro pero no te alcance [daniel_ruiz083 #25-0]
+26|5|20260929220358|60|gracias por la ayuda con el codigo [david_betancur008 #26-0]
+53|28|20260930100153|54|hoy toca laboratorio a las 10 para david_rios046 #7881
+54|70|20260930190729|58|cuando vamos a cartagena otra vez? [kevin_vargas033 #54-0]
+52|79|20261001203631|59|estoy en la fila de la fotocopiadora [julian_rios016 #52-0]
+84|66|20261003192343|56|ya subieron las notas del quiz para manuela_pena020 #610
+72|41|20261005154103|52|suerte en la sustentacion [mateo_rodriguez022 #72-0]
+64|76|20261005222735|61|dale, yo te ayudo con esa parte para natalia_ramirez061 #7055
+17|18|20261006130946|58|manana hay reunion del proyecto [carolina_arango081 #17-0]
+37|59|20261006172354|59|hoy no alcanzo, manana te escribo [esteban_moreno049 #37-1]
+61|40|20261007201550|62|trae el computador que hay que practicar [luisa_diaz057 #61-1]
+98|75|20261008172142|65|listo para el parcial de estructuras? [vanessa_martinez069 #98-0]
+39|37|20261009084526|54|hoy toca laboratorio a las 10 [felipe_osorio012 #39-1]
+16|17|20261009112353|52|buenas, todo bien por alla? [carlos_romero075 #16-0]
+27|6|20261009181436|48|estudiaste para el oral? [david_ortega084 #27-1]
+31|12|20261010085356|57|dale, yo te ayudo con esa parte [diego_quintero047 #31-1]
+77|91|20261011112512|50|ya termine la tarea de poo [natalia_ruiz023 #77-0]
+99|0|20261012074739|59|me gusto mucho tu foto del viaje [vanessa_ramirez031 #99-1]
+3|4|20261012091529|60|pasa por la cafetera cuando puedas [andrea_martinez039 #3-0]
+22|23|20261012122902|57|ya subieron las notas del quiz [catalina_torres044 #22-0]
+87|81|20261013100336|56|mira las fotos del album nuevo para oscar_munoz070 #5170
+6|46|20261013112233|59|listo, ya acepte la solicitud para isabella_torres014 #5042
+69|63|20261013165017|65|trae el computador que hay que practicar [maria_delgado097 #69-1]
+3|22|20261013173028|58|vamos al partido el domingo? para catalina_torres044 #1149
+93|23|20261013185536|60|sale un almuerzo por el centro? para daniel_delgado007 #3934
+75|55|20261015164219|64|estoy en la fila de la fotocopiadora [natalia_martinez099 #75-1]

@@ -1,8 +1,9 @@
 # genera pequenio (100), mediano (1000) y grande (5000)
-# la mayoria de usuarios tiene fotos, mensajes y solicitudes
+# fechas, claves y relaciones variadas; sin duplicados
 
 import os
 import random
+from datetime import date, datetime, timedelta
 
 NOMBRES = [
     "alejandro", "andrea", "andres", "angela", "camila", "carolina", "catalina",
@@ -67,36 +68,53 @@ ALBUMES = [
     "comida", "amigos", "campus", "salida", "vacaciones",
 ]
 
+# rango amplio para que el video pueda buscar >= 6 semanas
+FECHA_MIN = date(2026, 6, 1)
+FECHA_MAX = date(2026, 10, 15)
 
-def fecha_unica(seg_base):
-    # arma AAAAMMDDhhmmss sin repetir segundo a segundo
-    total = 1_700_000_000 + seg_base
-    dias = total // 86400
-    resto = total % 86400
-    # calendario simple desde 2024-01-01
-    anio = 2024
-    mes = 1
-    dia = 1 + dias
-    largos = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+def dias_mes(anio, mes):
+    if mes == 2:
+        if anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0):
+            return 29
+        return 28
+    if mes in (4, 6, 9, 11):
+        return 30
+    return 31
+
+
+def fecha14_aleatoria(usadas, inicio=None, fin=None):
+    """AAAAMMDDhhmmss unica; dia al azar dentro del rango."""
+    a = inicio or FECHA_MIN
+    b = fin or FECHA_MAX
+    span = (b - a).days
+    for _ in range(200):
+        d = a + timedelta(days=random.randint(0, max(span, 0)))
+        hh = random.randint(7, 22)
+        mm = random.randint(0, 59)
+        ss = random.randint(0, 59)
+        txt = f"{d.year:04d}{d.month:02d}{d.day:02d}{hh:02d}{mm:02d}{ss:02d}"
+        if txt not in usadas:
+            usadas.add(txt)
+            return txt
+    # si choco mucho, avanza segundo a segundo
+    base = datetime(a.year, a.month, a.day, 8, 0, 0)
     while True:
-        bisiesto = (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0))
-        dias_mes = 29 if (mes == 2 and bisiesto) else largos[mes - 1]
-        if dia <= dias_mes:
-            break
-        dia -= dias_mes
-        mes += 1
-        if mes > 12:
-            mes = 1
-            anio += 1
-            if anio > 2026:
-                anio = 2026
-                mes = 12
-                dia = min(dia, 28)
-                break
-    hh = resto // 3600
-    mm = (resto % 3600) // 60
-    ss = resto % 60
-    return f"{anio:04d}{mes:02d}{dia:02d}{hh:02d}{mm:02d}{ss:02d}"
+        txt = base.strftime("%Y%m%d%H%M%S")
+        if txt not in usadas:
+            usadas.add(txt)
+            return txt
+        base += timedelta(seconds=1)
+
+
+def clave_unica(usadas, i):
+    # todas distintas; la del demo (i==0 despues de ordenar nombres) se fija aparte
+    prefijos = ["clave", "pass", "uda", "info", "poo", "red", "book", "foto"]
+    while True:
+        c = f"{random.choice(prefijos)}{random.randint(1000, 9999)}{i % 97}"
+        if c not in usadas and len(c) <= 32:
+            usadas.add(c)
+            return c
 
 
 def generar(n, carpeta, semilla):
@@ -111,20 +129,28 @@ def generar(n, carpeta, semilla):
     usados.sort()
     demo = usados[0]
 
+    claves_usadas = set()
+    # demo con clave fija para el video
+    clave_demo = "clave123"
+    claves_usadas.add(clave_demo)
+
     lineas_usuarios = []
     for i in range(n):
-        nacimiento = (
-            f"{1988 + (i % 18):04d}{(i % 12) + 1:02d}{(i % 27) + 1:02d}"
-            f"{(i % 20) + 1:02d}{i % 50:02d}{i % 55:02d}"
-        )
-        inscripcion = (
-            f"202{4 + (i % 2)}{(i % 12) + 1:02d}{(i % 27) + 1:02d}"
-            f"{8 + (i % 10):02d}{i % 40:02d}{i % 50:02d}"
-        )
+        anio_n = random.randint(1988, 2005)
+        mes_n = random.randint(1, 12)
+        dia_n = random.randint(1, dias_mes(anio_n, mes_n))
+        nacimiento = f"{anio_n:04d}{mes_n:02d}{dia_n:02d}{random.randint(0,23):02d}{random.randint(0,59):02d}{random.randint(0,59):02d}"
+
+        anio_i = random.choice([2024, 2025, 2026])
+        mes_i = random.randint(1, 12)
+        dia_i = random.randint(1, dias_mes(anio_i, mes_i))
+        inscripcion = f"{anio_i:04d}{mes_i:02d}{dia_i:02d}{random.randint(8,20):02d}{random.randint(0,59):02d}{random.randint(0,59):02d}"
+
+        clave = clave_demo if i == 0 else clave_unica(claves_usadas, i)
         correo = f"{usados[i]}@udea.edu.co"
+        ciudad = random.choice(CIUDADES)
         lineas_usuarios.append(
-            f"{usados[i]}|{nacimiento}|{correo}|clave123|"
-            f"{CIUDADES[i % len(CIUDADES)]}|Colombia|{inscripcion}"
+            f"{usados[i]}|{nacimiento}|{correo}|{clave}|{ciudad}|Colombia|{inscripcion}"
         )
 
     amigos = [[False] * n for _ in range(n)]
@@ -137,7 +163,6 @@ def generar(n, carpeta, semilla):
         amigos[a][b] = True
         amigos[b][a] = True
 
-    # clique para el sorteo de fotos del demo
     tope = min(24, n - 1)
     if tope >= 2:
         for a in range(tope):
@@ -164,12 +189,10 @@ def generar(n, carpeta, semilla):
             for b in range(1, min(4, tope) + 1):
                 marcar(a, b)
 
-    # casi todos con al menos 2-4 amigos
     for u in range(n):
-        cuantos = 2 + (u % 3)
+        cuantos = random.randint(2, 5)
         for _ in range(cuantos):
-            otro = random.randint(0, n - 1)
-            marcar(u, otro)
+            marcar(u, random.randint(0, n - 1))
 
     lineas_amistad = []
     for a in range(n):
@@ -194,34 +217,41 @@ def generar(n, carpeta, semilla):
         lineas_sol.append(f"{emisor}|{receptor}")
         return True
 
-    # solicitudes hacia el demo
+    # solicitudes al demo (mezcladas, no siempre los mismos)
     candidatos = list(range(1, n))
-    if len(candidatos) >= 10:
-        for emisor in random.sample(candidatos, min(15, len(candidatos))):
-            agregar_sol(emisor, 0)
-        for receptor in random.sample(candidatos, min(10, len(candidatos))):
-            agregar_sol(0, receptor)
+    random.shuffle(candidatos)
+    for emisor in candidatos[: min(18, len(candidatos))]:
+        agregar_sol(emisor, 0)
+    random.shuffle(candidatos)
+    for receptor in candidatos[: min(12, len(candidatos))]:
+        agregar_sol(0, receptor)
 
-    # ~85% de usuarios manda o recibe al menos una solicitud
-    tope_sol = int(n * 0.85)
-    for u in range(tope_sol):
-        intentos = 0
-        while intentos < 12:
+    # casi todos participan en alguna solicitud, pares al azar
+    orden = list(range(n))
+    random.shuffle(orden)
+    for u in orden[: int(n * 0.88)]:
+        for _ in range(random.randint(1, 3)):
             otro = random.randint(0, n - 1)
-            if agregar_sol(u, otro) or agregar_sol(otro, u):
-                break
-            intentos += 1
+            if random.random() < 0.5:
+                agregar_sol(u, otro)
+            else:
+                agregar_sol(otro, u)
+
+    random.shuffle(lineas_sol)
 
     claves_msg = set()
     lineas_msg = []
-    reloj = 0
+    fechas_usadas = set()
 
-    def agregar_msg(emisor, receptor, texto):
-        nonlocal reloj
+    def agregar_msg(emisor, receptor, texto, fecha14=None):
         if emisor == receptor or not texto:
             return False
-        reloj += 1 + (emisor % 3)
-        fecha14 = fecha_unica(reloj)
+        if fecha14 is None:
+            fecha14 = fecha14_aleatoria(fechas_usadas)
+        elif fecha14 in fechas_usadas:
+            fecha14 = fecha14_aleatoria(fechas_usadas)
+        else:
+            fechas_usadas.add(fecha14)
         cuerpo = texto
         if len(cuerpo.encode("utf-8")) > 500:
             cuerpo = cuerpo[:200]
@@ -233,71 +263,70 @@ def generar(n, carpeta, semilla):
         lineas_msg.append(f"{emisor}|{receptor}|{fecha14}|{largo}|{cuerpo}")
         return True
 
-    # mensajes al demo repartidos en >6 semanas (para el video)
+    # 30 mensajes al demo cada 2 dias desde ago-1 (>= 6 semanas)
     amigos_demo = lista_amigos(0) or list(range(1, min(11, n)))
+    inicio_demo = date(2026, 8, 1)
     for k in range(30):
+        d = inicio_demo + timedelta(days=k * 2)
+        hh = 10 + (k % 8)
+        mm = (k * 7) % 60
+        ss = (k * 13) % 60
+        fecha = f"{d.year:04d}{d.month:02d}{d.day:02d}{hh:02d}{mm:02d}{ss:02d}"
         texto = FRASES[k % len(FRASES)]
-        if k % 5 == 0:
+        if k % 4 == 0:
             texto = f"{texto} ({usados[amigos_demo[k % len(amigos_demo)]]})"
-        agregar_msg(amigos_demo[k % len(amigos_demo)], 0, texto)
+        agregar_msg(amigos_demo[k % len(amigos_demo)], 0, texto, fecha)
 
-    # casi todos envian y reciben algo
+    # resto: casi todos envian/reciben en fechas sueltas
     for u in range(n):
         amigos_u = lista_amigos(u)
         if not amigos_u:
             amigos_u = [(u + 1) % n]
-        # 1 o 2 mensajes salientes
         for t in range(1 + (u % 2)):
             dest = amigos_u[(u + t) % len(amigos_u)]
-            frase = FRASES[(u + t * 11) % len(FRASES)]
-            agregar_msg(u, dest, f"{frase} [{usados[u]}]")
-        # 1 entrante de un amigo
-        origen = amigos_u[(u * 3) % len(amigos_u)]
-        frase2 = FRASES[(u * 5 + 3) % len(FRASES)]
-        agregar_msg(origen, u, f"{frase2} para {usados[u]}")
+            frase = FRASES[random.randint(0, len(FRASES) - 1)]
+            agregar_msg(u, dest, f"{frase} [{usados[u]} #{u}-{t}]")
+        origen = amigos_u[random.randint(0, len(amigos_u) - 1)]
+        frase2 = FRASES[random.randint(0, len(FRASES) - 1)]
+        agregar_msg(origen, u, f"{frase2} para {usados[u]} #{random.randint(1, 9999)}")
 
     lineas_msg.sort(key=lambda L: L.split("|")[2])
 
     lineas_media = []
     lineas_cambios = []
     id_foto = 0
+    fechas_foto = set()
 
     def agregar_album(usuario, nombre, privacidad, cantidad, likes_base):
         nonlocal id_foto
         lineas_media.append(f"A|{usuario}|{nombre}|{privacidad}")
         for f in range(1, cantidad + 1):
-            fecha = (
-                f"2026{7 + (f % 2):02d}{(f % 27) + 1:02d}"
-                f"{10 + (usuario % 8):02d}{f:02d}{(f * 2 + usuario % 50) % 60:02d}"
-            )
+            fecha = fecha14_aleatoria(fechas_foto, date(2026, 5, 1), date(2026, 10, 10))
             archivo = f"{nombre}_{f}"
-            lineas_media.append(f"F|{fecha}|{1200 + f * 37 + usuario}|{archivo}")
-            if likes_base + f > 0:
-                lineas_cambios.append(f"K|{id_foto}|{likes_base + f}")
+            bytes_f = 900 + random.randint(50, 4000) + f * 17 + (usuario % 50)
+            lineas_media.append(f"F|{fecha}|{bytes_f}|{archivo}")
+            likes = likes_base + f + random.randint(0, 5)
+            if likes > 0:
+                lineas_cambios.append(f"K|{id_foto}|{likes}")
             id_foto += 1
 
-    # demo del perfil: usuario 1 con 2 albumes de 5 + uno privado
     if n > 1:
         agregar_album(1, "viaje_cartagena", "A", 5, 2)
         agregar_album(1, "campus", "P", 5, 1)
         agregar_album(1, "privado", "R", 2, 0)
 
-    # ~90% de usuarios con al menos un album y fotos
     tope_fotos = int(n * 0.90)
     for u in range(n):
-        if u == 1:
+        if u == 1 or u >= tope_fotos:
             continue
-        if u >= tope_fotos:
-            continue
-        cuantos_alb = 1 + (u % 2)
+        cuantos_alb = random.randint(1, 2)
         for a in range(cuantos_alb):
-            nom = f"{ALBUMES[(u + a) % len(ALBUMES)]}_{u}"
-            priv = "A" if (u + a) % 3 else "P"
-            fotos = 1 + ((u + a) % 3)
-            agregar_album(u, nom, priv, fotos, (u % 4))
+            nom = f"{random.choice(ALBUMES)}_{u}_{a}"
+            priv = random.choice(["A", "A", "P"])
+            fotos = random.randint(1, 3)
+            agregar_album(u, nom, priv, fotos, random.randint(0, 4))
 
-    leidos = 10
-    lineas_cambios = [f"L|0|{leidos}"] + lineas_cambios
+    lineas_cambios = [f"L|0|10"] + lineas_cambios
 
     def escribir(nombre, lineas):
         with open(os.path.join(carpeta, nombre), "w", encoding="utf-8", newline="\n") as f:
@@ -309,6 +338,7 @@ def generar(n, carpeta, semilla):
     assert len(lineas_amistad) == len(set(lineas_amistad))
     assert len(lineas_sol) == len(set(lineas_sol))
     assert len(lineas_msg) == len(set(lineas_msg))
+    assert len(claves_usadas) == n
 
     escribir("usuarios.txt", lineas_usuarios)
     escribir("multimedia.txt", lineas_media)
@@ -317,42 +347,29 @@ def generar(n, carpeta, semilla):
     escribir("mensajes.txt", lineas_msg)
     escribir("cambios.txt", lineas_cambios)
 
-    # conteos rapidos de cobertura
-    con_foto = set()
-    for L in lineas_media:
-        if L.startswith("A|"):
-            con_foto.add(int(L.split("|")[1]))
-    con_msg = set()
-    for L in lineas_msg:
-        p = L.split("|")
-        con_msg.add(int(p[0]))
-        con_msg.add(int(p[1]))
-    con_sol = set()
-    for L in lineas_sol:
-        p = L.split("|")
-        con_sol.add(int(p[0]))
-        con_sol.add(int(p[1]))
+    msgs_demo = [L for L in lineas_msg if L.split("|")[1] == "0"]
+    dias_demo = sorted({L.split("|")[2][:8] for L in msgs_demo})
 
     print(f"=== {carpeta} ===")
-    print("usuarios", len(lineas_usuarios))
+    print("usuarios", len(lineas_usuarios), "| claves distintas", len(claves_usadas))
     print("amistades", len(lineas_amistad))
-    print("solicitudes", len(lineas_sol), f"(usuarios tocados {len(con_sol)} / {n})")
-    print("mensajes", len(lineas_msg), f"(usuarios tocados {len(con_msg)} / {n})")
-    print("con fotos", f"{len(con_foto)} / {n}")
-    print("demo:", demo, "/ clave123\n")
-    return demo
+    print("solicitudes", len(lineas_sol))
+    print("mensajes", len(lineas_msg))
+    print("dias distintos msgs demo:", len(dias_demo), "| desde", dias_demo[0], "hasta", dias_demo[-1])
+    print("demo:", demo, "/", clave_demo, "\n")
+    return demo, clave_demo
 
 
 def main():
     base = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base)
-    d1 = generar(100, "pequenio", 20261017)
-    d2 = generar(1000, "mediano", 20261018)
-    d3 = generar(5000, "grande", 20261019)
+    d1 = generar(100, "pequenio", 20261020)
+    d2 = generar(1000, "mediano", 20261021)
+    d3 = generar(5000, "grande", 20261022)
     print("listo")
-    print("demo pequenio:", d1)
-    print("demo mediano:", d2)
-    print("demo grande:", d3)
+    print("demo pequenio:", d1[0], d1[1])
+    print("demo mediano:", d2[0], d2[1])
+    print("demo grande:", d3[0], d3[1])
 
 
 if __name__ == "__main__":
