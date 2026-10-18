@@ -92,7 +92,9 @@ bool RedSocial::inicializarRed(unsigned int numUsuarios) {
 }
 
 bool RedSocial::agregarUsuario(Usuario * usuario) {
-    //el gestor puede meter nullptr para no correr los indices de linea
+    if (usuario == nullptr) {
+        return false;
+    }
     return usuarios.agregar(usuario);
 }
 
@@ -117,6 +119,7 @@ GestorArchivos & RedSocial::getGestor() { return *gestor; }
 MedidorRecursos & RedSocial::getMedidor() { return *medidor; }
 
 Usuario * RedSocial::buscarUsuario(const char * nombre) const {
+    //usuarios van densos y ordenados: busqueda binaria pura
     unsigned int n = usuarios.getTamanio();
     unsigned int bajo = 0;
     unsigned int alto = n;
@@ -128,19 +131,7 @@ Usuario * RedSocial::buscarUsuario(const char * nombre) const {
         unsigned int medio = bajo + (alto - bajo) / 2;
         Usuario * u = usuarios[medio];
         if (u == nullptr) {
-            //si hay huecos, se busca en linea para no romper indices
-            for (unsigned int i = 0; i < n; i++) {
-                vueltas++;
-                Usuario * candidato = usuarios[i];
-                if (candidato != nullptr && iguales(candidato->getNombreUsuario(), nombre)) {
-                    MedidorRecursos::sumarIteraciones(vueltas);
-                    MedidorRecursos::sumarReferencia(i + 1);
-                    return candidato;
-                }
-            }
-            MedidorRecursos::sumarIteraciones(vueltas);
-            MedidorRecursos::sumarReferencia(n);
-            return nullptr;
+            break;
         }
         int orden = comparar(nombre, u->getNombreUsuario());
         if (orden == 0) {
@@ -193,7 +184,9 @@ unsigned short RedSocial::iniciarSesion(const char * nombre, const char * contra
     fotosActualizadas = false;
     cantidadGrupo = 0;
     iniciarFotosAmigos();
-    MedidorRecursos::sumarMemoriaLocal(sizeof(nombre) + sizeof(contrasena) + sizeof(u));
+    MedidorRecursos::sumarMemoriaLocal(sizeof(u)
+        + (nombre != nullptr ? longitud(nombre) + 1 : 0)
+        + (contrasena != nullptr ? longitud(contrasena) + 1 : 0));
     return RES_OK;
 }
 
@@ -419,14 +412,22 @@ void RedSocial::iniciarMedicion(unsigned short idFuncionalidad) {
 
 void RedSocial::mostrarReporte() {
     if (medidor != nullptr) {
-        medidor->finalizarFuncionalidad(calcularMemoria(), calcularMemoriaReferencia());
+        MedidorRecursos::pausarConteo();
+        unsigned long memoria = calcularMemoria();
+        unsigned long referencia = calcularMemoriaReferencia();
+        MedidorRecursos::reanudarConteo();
+        medidor->finalizarFuncionalidad(memoria, referencia);
         medidor->iniciarFuncionalidad(FUNC_CARGA);
     }
 }
 
 void RedSocial::mostrarResumenSesion() {
     if (medidor != nullptr) {
-        medidor->mostrarResumenSesion(calcularMemoria(), calcularMemoriaReferencia());
+        MedidorRecursos::pausarConteo();
+        unsigned long memoria = calcularMemoria();
+        unsigned long referencia = calcularMemoriaReferencia();
+        MedidorRecursos::reanudarConteo();
+        medidor->mostrarResumenSesion(memoria, referencia);
     }
 }
 

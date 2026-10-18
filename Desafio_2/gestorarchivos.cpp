@@ -239,6 +239,20 @@ void GestorArchivos::avisarActualizacion(unsigned short idArchivo) const {
     std::cout << "AVISO se agrego una linea a " << nombreArchivoDatos(idArchivo) << "\n";
 }
 
+bool GestorArchivos::registrarFotoId(Foto * foto) {
+    if (foto == nullptr) {
+        return false;
+    }
+    Foto * vacio = nullptr;
+    while (fotosPorId.getTamanio() <= foto->getId()) {
+        if (!fotosPorId.agregar(vacio)) {
+            return false;
+        }
+    }
+    fotosPorId[foto->getId()] = foto;
+    return true;
+}
+
 bool GestorArchivos::cargarUsuarios(RedSocial & red) {
     char ruta[1024];
     if (!armarRutaArchivo(ARCH_USUARIOS, ruta, 1024)) {
@@ -249,17 +263,17 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
         std::cout << "AVISO no se pudo abrir " << ruta << "\n";
         return false;
     }
+    //el generador deja usuarios ordenados y sin huecos; si algo falla se aborta
+    //asi el indice de linea = indice de usuario y la busqueda binaria no se rompe
     char linea[MAX_LINEA];
-    Usuario * ultimoValido = nullptr;
-    unsigned int descartados = 0;
+    Usuario * ultimo = nullptr;
+    MedidorRecursos::sumarMemoriaLocal(sizeof(ruta) + sizeof(linea));
     while (leerLinea(archivo, linea, MAX_LINEA)) {
-        registros[ARCH_USUARIOS]++;
-        unsigned int indice = red.getNumUsuarios();
         if (linea[0] == '\0') {
-            descartados++;
-            red.agregarUsuario(nullptr);
             continue;
         }
+        registros[ARCH_USUARIOS]++;
+        unsigned int indice = red.getNumUsuarios();
         unsigned int i = 0;
         char nombre[64];
         char nacimiento[16];
@@ -268,38 +282,32 @@ bool GestorArchivos::cargarUsuarios(RedSocial & red) {
         char ciudad[64];
         char pais[64];
         char inscripcion[16];
+        MedidorRecursos::sumarMemoriaLocal(sizeof(nombre) + sizeof(nacimiento) + sizeof(correo)
+                                           + sizeof(clave) + sizeof(ciudad) + sizeof(pais) + sizeof(inscripcion));
         if (!tomarCampo(linea, i, nombre, 64) || !tomarCampo(linea, i, nacimiento, 16)
             || !tomarCampo(linea, i, correo, 80) || !tomarCampo(linea, i, clave, 64)
             || !tomarCampo(linea, i, ciudad, 64) || !tomarCampo(linea, i, pais, 64)
-            || !tomarCampo(linea, i, inscripcion, 16)
-            || (ultimoValido != nullptr && comparar(nombre, ultimoValido->getNombreUsuario()) <= 0)) {
-            descartados++;
-            red.agregarUsuario(nullptr);
-            continue;
+            || !tomarCampo(linea, i, inscripcion, 16)) {
+            std::cout << "AVISO usuarios.txt linea mala en indice " << indice << "\n";
+            return false;
+        }
+        if (ultimo != nullptr && comparar(nombre, ultimo->getNombreUsuario()) <= 0) {
+            std::cout << "AVISO usuarios.txt fuera de orden en " << nombre << "\n";
+            return false;
         }
         FechaHora fechaNacimiento;
         FechaHora fechaInscripcion;
         if (!fechaNacimiento.desdeTexto14(nacimiento) || !fechaInscripcion.desdeTexto14(inscripcion)) {
-            descartados++;
-            red.agregarUsuario(nullptr);
-            continue;
+            std::cout << "AVISO usuarios.txt fecha invalida en " << nombre << "\n";
+            return false;
         }
         Usuario * usuario = new (std::nothrow) Usuario(nombre, clave, fechaNacimiento, fechaInscripcion, indice);
         if (usuario == nullptr || !usuario->estaValido() || !usuario->setCorreo(correo)
-            || !usuario->setCiudad(ciudad) || !usuario->setPais(pais)) {
-            delete usuario;
-            descartados++;
-            red.agregarUsuario(nullptr);
-            continue;
-        }
-        if (!red.agregarUsuario(usuario)) {
+            || !usuario->setCiudad(ciudad) || !usuario->setPais(pais) || !red.agregarUsuario(usuario)) {
             delete usuario;
             return false;
         }
-        ultimoValido = usuario;
-    }
-    if (descartados > 0 && mostrarMensajes) {
-        std::cout << "AVISO usuarios.txt: " << descartados << " lineas descartadas (formato, fecha, repetido o fuera de orden); su indice queda vacio\n";
+        ultimo = usuario;
     }
     return red.inicializarRed(red.getNumUsuarios());
 }
@@ -356,7 +364,8 @@ bool GestorArchivos::cargarMultimedia(RedSocial & red) {
             FechaHora fecha;
             if (album != nullptr && fecha.desdeTexto14(fechaTxt)) {
                 Foto * foto = new (std::nothrow) Foto(idFoto, fecha, bytes, nombre, 0);
-                if (foto == nullptr || !foto->estaValido() || !album->agregarFoto(foto)) {
+                if (foto == nullptr || !foto->estaValido() || !album->agregarFoto(foto)
+                    || !registrarFotoId(foto)) {
                     delete foto;
                 }
             }
@@ -505,9 +514,8 @@ bool GestorArchivos::cargarCambios(RedSocial & red) {
         return true;
     }
 
-    ListaDinamica<Foto *> fotosPorId;
-    bool tablaLista = false;
     char linea[MAX_LINEA];
+    MedidorRecursos::sumarMemoriaLocal(sizeof(linea));
     while (leerLinea(archivo, linea, MAX_LINEA)) {
         if (linea[0] == '\0') {
             continue;
@@ -531,33 +539,9 @@ bool GestorArchivos::cargarCambios(RedSocial & red) {
                 continue;
             }
             unsigned int n = usuario->getMensajesRecibidos().getTamanio();
-            usuario->setPrimerNoLeido(b > n ? n : b);     //gana el ultimo registro; se recorta a la bandeja
-        } else {
-            if (!tablaLista) {
-                tablaLista = true;
-                for (unsigned int u = 0; u < red.getNumUsuarios(); u++) {
-                    Usuario * usuario = red.getUsuario(u);
-                    if (usuario == nullptr) {
-                        continue;
-                    }
-                    for (unsigned int al = 0; al < usuario->getNumAlbumes(); al++) {
-                        AlbumFotos * album = usuario->buscarAlbum(al);
-                        for (unsigned int f = 0; album != nullptr && f < album->getNumFotos(); f++) {
-                            Foto * foto = album->getFoto(f);
-                            Foto * vacio = nullptr;
-                            while (fotosPorId.getTamanio() <= foto->getId()) {
-                                if (!fotosPorId.agregar(vacio)) {
-                                    return false;
-                                }
-                            }
-                            fotosPorId[foto->getId()] = foto;
-                        }
-                    }
-                }
-            }
-            if (a < fotosPorId.getTamanio() && fotosPorId[a] != nullptr) {
-                fotosPorId[a]->setLikes(b);
-            }
+            usuario->setPrimerNoLeido(b > n ? n : b);
+        } else if (a < fotosPorId.getTamanio() && fotosPorId[a] != nullptr) {
+            fotosPorId[a]->setLikes(b);
         }
     }
 
@@ -598,6 +582,7 @@ bool GestorArchivos::registrarMensaje(const Mensaje & mensaje) {
     char fecha[16];
     mensaje.getFechaEnvio().aTexto14(fecha);
     char linea[MAX_LINEA];
+    MedidorRecursos::sumarMemoriaLocal(sizeof(fecha) + sizeof(linea));
     unsigned int usado = 0;
     linea[0] = '\0';
     if (!pegarNumero(linea, MAX_LINEA, usado, mensaje.getEmisor()->getIndice())
@@ -699,7 +684,7 @@ bool GestorArchivos::armarRutaPerfil(const Usuario & duenio, char * destino, uns
 }
 
 unsigned long GestorArchivos::calcularMemoria() const {
-    unsigned long total = sizeof(*this);
+    unsigned long total = sizeof(*this) + fotosPorId.calcularMemoria() - sizeof(fotosPorId);
     if (rutaDatos != nullptr) {
         total += longitud(rutaDatos) + 1;
     }

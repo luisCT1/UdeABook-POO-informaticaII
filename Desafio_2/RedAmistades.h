@@ -9,7 +9,10 @@ private:
     unsigned long long * bitsAmistad;
     unsigned long long * bitsSolicitud;
     unsigned int * grados;
-    unsigned int *pendientes;
+    unsigned int * pendientes;
+    //lista de adyacencia: para recorrer amigos sin barrer la fila de bits
+    unsigned int ** listasAmigos;
+    unsigned int * capListas;
     unsigned int numUsuarios;
     unsigned int palabrasPorFila;
     std::mt19937 generador;
@@ -21,6 +24,7 @@ private:
     unsigned int contarBits(unsigned long long palabra) const;
     unsigned int extraerIndices(const unsigned long long * matriz, unsigned int fila,
                                 unsigned int * salida, unsigned int capacidad) const;
+    bool agregarEnLista(unsigned int u, unsigned int v);
     float calcularPeso(unsigned int amigosEnComun) const;
     void  liberar();
 

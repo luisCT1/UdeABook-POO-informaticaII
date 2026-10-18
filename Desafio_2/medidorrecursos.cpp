@@ -64,6 +64,7 @@ static void linea(const char * texto, unsigned long long valor) {
 }
 
 MedidorRecursos * MedidorRecursos::activo = nullptr;
+bool MedidorRecursos::contando = true;
 
 MedidorRecursos::MedidorRecursos()
     : funcionalidadActual(FUNC_CARGA),
@@ -93,6 +94,9 @@ MedidorRecursos & MedidorRecursos::obtener() {
 }
 
 void MedidorRecursos::sumarIteraciones(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.iterFuncionalidad += n;
     m.iterPorFunc[m.funcionalidadActual] += n;
@@ -102,6 +106,9 @@ void MedidorRecursos::sumarIteraciones(unsigned long long n) {
 }
 
 void MedidorRecursos::sumarReferencia(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.refFuncionalidad += n;
     m.refPorFunc[m.funcionalidadActual] += n;
@@ -116,6 +123,9 @@ void MedidorRecursos::sumarComun(unsigned long long n) {
 }
 
 void MedidorRecursos::sumarUsoExterno(unsigned long long n) {
+    if (!contando) {
+        return;
+    }
     MedidorRecursos & m = obtener();
     m.extFuncionalidad += n;
     m.extPorFunc[m.funcionalidadActual] += n;
@@ -126,6 +136,14 @@ void MedidorRecursos::sumarUsoExterno(unsigned long long n) {
 
 void MedidorRecursos::sumarMemoriaLocal(unsigned long bytes) {
     obtener().memoriaLocal += bytes;
+}
+
+void MedidorRecursos::pausarConteo() {
+    contando = false;
+}
+
+void MedidorRecursos::reanudarConteo() {
+    contando = true;
 }
 
 void MedidorRecursos::iniciarFuncionalidad(unsigned short idFuncionalidad) {

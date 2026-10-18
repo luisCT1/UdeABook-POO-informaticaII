@@ -6,6 +6,7 @@
 class MedidorRecursos {
 private:
     static MedidorRecursos * activo;
+    static bool contando;
     unsigned short funcionalidadActual;
     unsigned long long iterFuncionalidad, refFuncionalidad, extFuncionalidad;
     unsigned long memoriaLocal;
@@ -30,6 +31,10 @@ public:
     static void sumarComun(unsigned long long n = 1);
     static void sumarUsoExterno(unsigned long long n = 1);
     static void sumarMemoriaLocal(unsigned long bytes);
+
+    //al medir memoria no hay que sumar iteraciones de ese recorrido
+    static void pausarConteo();
+    static void reanudarConteo();
 
     void iniciarFuncionalidad(unsigned short idFuncionalidad);
 

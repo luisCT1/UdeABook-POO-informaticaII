@@ -5,6 +5,7 @@
 #include "AlbumFotos.h"
 #include "Foto.h"
 #include "Mensaje.h"
+#include "MedidorRecursos.h"
 #include "utilidades.h"
 #include "configuracion.h"
 
@@ -17,6 +18,7 @@ bool entradaCerrada = false;
 
 void leerTexto(const char * aviso, char * buffer, unsigned int cap) {
     std::cout << aviso;
+    MedidorRecursos::sumarMemoriaLocal(cap);
     if (std::cin.getline(buffer, cap)) {
         return;
     }
@@ -89,10 +91,10 @@ void cerrarFuncionalidad(RedSocial & red) {
 
 }
 
-const char * seleccionarDataset() {
+const char * buscarCarpeta(const char * relativa) {
     static char ruta[512];
     char intento[512];
-    copiarEn("datos/conjunto", intento, 512);
+    copiarEn(relativa, intento, 512);
     for (int sube = 0; sube < 6; sube++) {
         if (existeDataset(intento)) {
             copiarEn(intento, ruta, 512);
@@ -115,8 +117,25 @@ const char * seleccionarDataset() {
         siguiente[n + m] = '\0';
         copiarEn(siguiente, intento, 512);
     }
-    copiarEn("datos/conjunto", ruta, 512);
+    copiarEn(relativa, ruta, 512);
     return ruta;
+}
+
+const char * seleccionarDataset() {
+    std::cout << "\nque base de datos quieres?\n";
+    std::cout << "  1. pequenio   (100 usuarios)\n";
+    std::cout << "  2. mediano    (1000 usuarios)\n";
+    std::cout << "  3. grande     (5000 usuarios)\n";
+    char op[8];
+    leerTexto("> ", op, 8);
+    if (op[0] == '1') {
+        return buscarCarpeta("datos/pequenio");
+    }
+    if (op[0] == '3') {
+        return buscarCarpeta("datos/grande");
+    }
+    //enter o 2 = mediano, que es el de la entrega
+    return buscarCarpeta("datos/mediano");
 }
 
 bool pantallaDeIngreso(RedSocial & red) {

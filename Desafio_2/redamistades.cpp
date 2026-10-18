@@ -2,6 +2,7 @@
 #include "MedidorRecursos.h"
 #include "utilidades.h"
 #include <chrono>
+#include <new>
 
 using namespace std;
 
@@ -62,11 +63,49 @@ float RedAmistades::calcularPeso(unsigned int amigosEnComun) const {
     return PESO_ALTO;
 }
 
+bool RedAmistades::agregarEnLista(unsigned int u, unsigned int v) {
+    unsigned int usados = grados[u];
+    if (listasAmigos[u] == nullptr) {
+        capListas[u] = 4;
+        listasAmigos[u] = reservar<unsigned int>(capListas[u]);
+        if (listasAmigos[u] == nullptr) {
+            return false;
+        }
+    }
+    if (usados >= capListas[u]) {
+        unsigned int nuevaCap = capListas[u] * 2;
+        if (nuevaCap < usados + 1) {
+            nuevaCap = usados + 1;
+        }
+        unsigned int * nuevo = reservar<unsigned int>(nuevaCap);
+        if (nuevo == nullptr) {
+            return false;
+        }
+        for (unsigned int i = 0; i < usados; i++) {
+            nuevo[i] = listasAmigos[u][i];
+        }
+        delete[] listasAmigos[u];
+        listasAmigos[u] = nuevo;
+        capListas[u] = nuevaCap;
+    }
+    listasAmigos[u][usados] = v;
+    return true;
+}
+
 void RedAmistades::liberar() {
+    if (listasAmigos != nullptr) {
+        for (unsigned int i = 0; i < numUsuarios; i++) {
+            delete[] listasAmigos[i];
+        }
+    }
+    delete[] listasAmigos;
+    delete[] capListas;
     delete[] bitsAmistad;
     delete[] bitsSolicitud;
     delete[] grados;
     delete[] pendientes;
+    listasAmigos = nullptr;
+    capListas = nullptr;
     bitsAmistad = nullptr;
     bitsSolicitud = nullptr;
     grados = nullptr;
@@ -75,13 +114,15 @@ void RedAmistades::liberar() {
 
 RedAmistades::RedAmistades()
     : bitsAmistad(nullptr), bitsSolicitud(nullptr), grados(nullptr), pendientes(nullptr),
-    numUsuarios(0), palabrasPorFila(0), valido(true) {
+      listasAmigos(nullptr), capListas(nullptr),
+      numUsuarios(0), palabrasPorFila(0), valido(true) {
     generador.seed((unsigned int)chrono::steady_clock::now().time_since_epoch().count());
 }
 
 RedAmistades::RedAmistades(unsigned int n)
     : bitsAmistad(nullptr), bitsSolicitud(nullptr), grados(nullptr), pendientes(nullptr),
-    numUsuarios(n), palabrasPorFila((n + BITS_POR_PALABRA - 1) / BITS_POR_PALABRA), valido(true) {
+      listasAmigos(nullptr), capListas(nullptr),
+      numUsuarios(n), palabrasPorFila((n + BITS_POR_PALABRA - 1) / BITS_POR_PALABRA), valido(true) {
     generador.seed((unsigned int)chrono::steady_clock::now().time_since_epoch().count());
     if (n == 0) {
         return;
@@ -98,7 +139,10 @@ RedAmistades::RedAmistades(unsigned int n)
     bitsSolicitud = reservar<unsigned long long>((unsigned int)total);
     grados = reservar<unsigned int>(n);
     pendientes = reservar<unsigned int>(n);
-    if (bitsAmistad == nullptr || bitsSolicitud == nullptr || grados == nullptr || pendientes == nullptr) {
+    listasAmigos = new (std::nothrow) unsigned int *[n];
+    capListas = reservar<unsigned int>(n);
+    if (bitsAmistad == nullptr || bitsSolicitud == nullptr || grados == nullptr
+        || pendientes == nullptr || listasAmigos == nullptr || capListas == nullptr) {
         liberar();
         numUsuarios = 0;
         palabrasPorFila = 0;
@@ -112,13 +156,16 @@ RedAmistades::RedAmistades(unsigned int n)
     for (unsigned int i = 0; i < n; i++) {
         grados[i] = 0;
         pendientes[i] = 0;
+        listasAmigos[i] = nullptr;
+        capListas[i] = 0;
     }
     MedidorRecursos::sumarIteraciones(total + n);
 }
 
 RedAmistades::RedAmistades(const RedAmistades & otra)
     : bitsAmistad(nullptr), bitsSolicitud(nullptr), grados(nullptr), pendientes(nullptr),
-    numUsuarios(0), palabrasPorFila(0), generador(otra.generador), valido(true) {
+      listasAmigos(nullptr), capListas(nullptr),
+      numUsuarios(0), palabrasPorFila(0), generador(otra.generador), valido(true) {
     if (!otra.valido) {
         valido = false;
         return;
@@ -126,27 +173,7 @@ RedAmistades::RedAmistades(const RedAmistades & otra)
     if (otra.numUsuarios == 0) {
         return;
     }
-    unsigned long long total = (unsigned long long)otra.numUsuarios * otra.palabrasPorFila;
-    bitsAmistad = reservar<unsigned long long>((unsigned int)total);
-    bitsSolicitud = reservar<unsigned long long>((unsigned int)total);
-    grados = reservar<unsigned int>(otra.numUsuarios);
-    pendientes = reservar<unsigned int>(otra.numUsuarios);
-    if (bitsAmistad == nullptr || bitsSolicitud == nullptr || grados == nullptr || pendientes == nullptr) {
-        liberar();
-        valido = false;
-        return;
-    }
-    numUsuarios = otra.numUsuarios;
-    palabrasPorFila = otra.palabrasPorFila;
-    for (unsigned long long i = 0; i < total; i++) {
-        bitsAmistad[i] = otra.bitsAmistad[i];
-        bitsSolicitud[i] = otra.bitsSolicitud[i];
-    }
-    for (unsigned int i = 0; i < numUsuarios; i++) {
-        grados[i] = otra.grados[i];
-        pendientes[i] = otra.pendientes[i];
-    }
-    MedidorRecursos::sumarIteraciones(total + numUsuarios);
+    *this = otra;
 }
 
 RedAmistades::~RedAmistades() {
@@ -161,18 +188,29 @@ RedAmistades & RedAmistades::operator=(const RedAmistades & otra) {
     unsigned long long * nuevasSolicitud = nullptr;
     unsigned int * nuevosGrados = nullptr;
     unsigned int * nuevosPendientes = nullptr;
+    unsigned int ** nuevasListas = nullptr;
+    unsigned int * nuevasCaps = nullptr;
     unsigned long long total = (unsigned long long)otra.numUsuarios * otra.palabrasPorFila;
     if (otra.numUsuarios > 0) {
         nuevasAmistad = reservar<unsigned long long>((unsigned int)total);
         nuevasSolicitud = reservar<unsigned long long>((unsigned int)total);
         nuevosGrados = reservar<unsigned int>(otra.numUsuarios);
         nuevosPendientes = reservar<unsigned int>(otra.numUsuarios);
-        if (nuevasAmistad == nullptr || nuevasSolicitud == nullptr || nuevosGrados == nullptr || nuevosPendientes == nullptr) {
+        nuevasListas = new (std::nothrow) unsigned int *[otra.numUsuarios];
+        nuevasCaps = reservar<unsigned int>(otra.numUsuarios);
+        if (nuevasAmistad == nullptr || nuevasSolicitud == nullptr || nuevosGrados == nullptr
+            || nuevosPendientes == nullptr || nuevasListas == nullptr || nuevasCaps == nullptr) {
             delete[] nuevasAmistad;
             delete[] nuevasSolicitud;
             delete[] nuevosGrados;
             delete[] nuevosPendientes;
+            delete[] nuevasListas;
+            delete[] nuevasCaps;
             return *this;
+        }
+        for (unsigned int i = 0; i < otra.numUsuarios; i++) {
+            nuevasListas[i] = nullptr;
+            nuevasCaps[i] = 0;
         }
         for (unsigned long long i = 0; i < total; i++) {
             nuevasAmistad[i] = otra.bitsAmistad[i];
@@ -181,6 +219,25 @@ RedAmistades & RedAmistades::operator=(const RedAmistades & otra) {
         for (unsigned int i = 0; i < otra.numUsuarios; i++) {
             nuevosGrados[i] = otra.grados[i];
             nuevosPendientes[i] = otra.pendientes[i];
+            nuevasCaps[i] = otra.capListas[i];
+            if (otra.listasAmigos[i] != nullptr && otra.grados[i] > 0) {
+                nuevasListas[i] = reservar<unsigned int>(otra.capListas[i] > 0 ? otra.capListas[i] : otra.grados[i]);
+                if (nuevasListas[i] == nullptr) {
+                    for (unsigned int j = 0; j < i; j++) {
+                        delete[] nuevasListas[j];
+                    }
+                    delete[] nuevasAmistad;
+                    delete[] nuevasSolicitud;
+                    delete[] nuevosGrados;
+                    delete[] nuevosPendientes;
+                    delete[] nuevasListas;
+                    delete[] nuevasCaps;
+                    return *this;
+                }
+                for (unsigned int j = 0; j < otra.grados[i]; j++) {
+                    nuevasListas[i][j] = otra.listasAmigos[i][j];
+                }
+            }
         }
         MedidorRecursos::sumarIteraciones(total + otra.numUsuarios);
     }
@@ -189,6 +246,8 @@ RedAmistades & RedAmistades::operator=(const RedAmistades & otra) {
     bitsSolicitud = nuevasSolicitud;
     grados = nuevosGrados;
     pendientes = nuevosPendientes;
+    listasAmigos = nuevasListas;
+    capListas = nuevasCaps;
     numUsuarios = otra.numUsuarios;
     palabrasPorFila = otra.palabrasPorFila;
     generador = otra.generador;
@@ -205,6 +264,9 @@ bool RedAmistades::conectar(unsigned int a, unsigned int b) {
         return false;
     }
     if (leerBit(bitsAmistad, a, b)) {
+        return false;
+    }
+    if (!agregarEnLista(a, b) || !agregarEnLista(b, a)) {
         return false;
     }
     escribirBit(bitsAmistad, a, b, true);
@@ -241,11 +303,22 @@ unsigned int RedAmistades::contarEnComun(unsigned int a, unsigned int b) const {
 }
 
 unsigned int RedAmistades::obtenerAmigos(unsigned int a, unsigned int * salida, unsigned int capacidad) const {
-    if (a >= numUsuarios) {
+    if (a >= numUsuarios || salida == nullptr || capacidad == 0) {
         return 0;
     }
-    MedidorRecursos::sumarReferencia(numUsuarios);
-    return extraerIndices(bitsAmistad, a, salida, capacidad);
+    unsigned int n = grados[a];
+    if (n > capacidad) {
+        n = capacidad;
+    }
+    MedidorRecursos::sumarReferencia(n);
+    MedidorRecursos::sumarIteraciones(n);
+    if (listasAmigos[a] == nullptr) {
+        return 0;
+    }
+    for (unsigned int i = 0; i < n; i++) {
+        salida[i] = listasAmigos[a][i];
+    }
+    return n;
 }
 
 unsigned short RedAmistades::enviarSolicitud(unsigned int emisor, unsigned int receptor) {
@@ -324,7 +397,7 @@ unsigned short RedAmistades::sortearAmigos(unsigned int usuario, unsigned short 
 
     MedidorRecursos::sumarMemoriaLocal((unsigned long)totalAmigos * (sizeof(unsigned int) + sizeof(float)));
 
-    unsigned int n = extraerIndices(bitsAmistad, usuario, amigos, totalAmigos);
+    unsigned int n = obtenerAmigos(usuario, amigos, totalAmigos);
     unsigned long long vueltas = 0;
     for (unsigned int i = 0; i < n; i++) {
         bool excluido = false;
@@ -373,8 +446,16 @@ unsigned short RedAmistades::sortearAmigos(unsigned int usuario, unsigned short 
 
 unsigned long RedAmistades::calcularMemoria() const {
     unsigned long long total = (unsigned long long)numUsuarios * palabrasPorFila;
-    return (unsigned long)(sizeof(*this) + 2 * total * sizeof(unsigned long long)
-                            + 2ULL * numUsuarios * sizeof(unsigned int));
+    unsigned long long bytes = sizeof(*this) + 2 * total * sizeof(unsigned long long)
+        + 2ULL * numUsuarios * sizeof(unsigned int)
+        + (unsigned long long)numUsuarios * sizeof(unsigned int *)
+        + (unsigned long long)numUsuarios * sizeof(unsigned int);
+    for (unsigned int i = 0; i < numUsuarios; i++) {
+        if (listasAmigos != nullptr && listasAmigos[i] != nullptr) {
+            bytes += (unsigned long long)capListas[i] * sizeof(unsigned int);
+        }
+    }
+    return (unsigned long)bytes;
 }
 
 unsigned long RedAmistades::calcularMemoriaReferencia() const {

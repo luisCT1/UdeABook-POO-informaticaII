@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 #include "configuracion.h"
+#include "listadinamica.h"
 
 class RedSocial;
 class Usuario;
@@ -17,8 +18,11 @@ private:
     char * rutaDatos;
     char * subRutaFija;
     unsigned int registros[NUM_ARCHIVOS];
+    ListaDinamica<Foto *> fotosPorId;
     bool mostrarMensajes;
     bool valido;
+
+    bool registrarFotoId(Foto * foto);
 
     bool cargarUsuarios(RedSocial & red);
     bool cargarMultimedia(RedSocial & red);
