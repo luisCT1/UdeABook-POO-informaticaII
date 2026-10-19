@@ -14,7 +14,8 @@ static const char * const NOMBRES[NUM_FUNCIONALIDADES] = {
     "Enviar mensaje",
     "Leer mensajes nuevos",
     "Buscar mensajes por fechas",
-    "Actualizar fotos de amigos"
+    "Actualizar fotos de amigos",
+    "Listar mis amigos"
 };
 
 static void formatear(unsigned long long valor, char * destino) {

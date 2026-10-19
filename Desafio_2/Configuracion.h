@@ -38,7 +38,8 @@ const unsigned short FUNC_ENVIAR_MENSAJE   = 6;
 const unsigned short FUNC_LEER_NUEVOS      = 7;
 const unsigned short FUNC_RANGO_MENSAJES   = 8;
 const unsigned short FUNC_ACTUALIZAR_FOTOS = 9;
-const unsigned short NUM_FUNCIONALIDADES   = 10;
+const unsigned short FUNC_LISTAR_AMIGOS    = 10;
+const unsigned short NUM_FUNCIONALIDADES   = 11;
 
 const unsigned short RES_OK                  = 0;
 const unsigned short RES_SIN_SESION          = 1;

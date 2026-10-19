@@ -17,8 +17,8 @@ Red social por consola hecha en C++ con POO, sin herencia y con memoria dinamica
 
 ## Como correrlo
 1. Abrir `Desafio_2/Desafio_2.pro` en Qt Creator
-2. Compilar y ejecutar
-3. Elegir la base: pequenio (100), mediano (1000) o grande (5000)
+2. Compilar y ejecutar (por defecto carga `datos/mediano`)
+3. Para otra base, en `main.cpp` cambia `"datos/mediano"` por `"datos/pequenio"` o `"datos/grande"`
 
 ## Cuenta de prueba (mediano)
 - usuario: `alejandro_alvarez152`

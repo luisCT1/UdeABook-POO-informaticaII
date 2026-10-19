@@ -11,6 +11,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <new>
 
 namespace {
 
@@ -91,7 +92,7 @@ void cerrarFuncionalidad(RedSocial & red) {
 
 }
 
-const char * buscarCarpeta(const char * relativa) {
+const char * buscarCarpetaDatos(const char * relativa) {
     static char ruta[512];
     char intento[512];
     copiarEn(relativa, intento, 512);
@@ -119,23 +120,6 @@ const char * buscarCarpeta(const char * relativa) {
     }
     copiarEn(relativa, ruta, 512);
     return ruta;
-}
-
-const char * seleccionarDataset() {
-    std::cout << "\nque base de datos quieres?\n";
-    std::cout << "  1. pequenio   (100 usuarios)\n";
-    std::cout << "  2. mediano    (1000 usuarios)\n";
-    std::cout << "  3. grande     (5000 usuarios)\n";
-    char op[8];
-    leerTexto("> ", op, 8);
-    if (op[0] == '1') {
-        return buscarCarpeta("datos/pequenio");
-    }
-    if (op[0] == '3') {
-        return buscarCarpeta("datos/grande");
-    }
-    //enter o 2 = mediano, que es el de la entrega
-    return buscarCarpeta("datos/mediano");
 }
 
 bool pantallaDeIngreso(RedSocial & red) {
@@ -184,6 +168,7 @@ void mostrarPantallaInicio(RedSocial & red) {
     std::cout << "  3. personas que quizas conozcas\n";
     std::cout << "  4. mensajes\n";
     std::cout << "  n. otras fotos de amigos\n";
+    std::cout << "  c. cerrar sesion (otro usuario)\n";
     std::cout << "  s. salir\n";
 }
 
@@ -191,6 +176,7 @@ void opcionAmigos(RedSocial & red) {
     std::cout << "\namigos y solicitudes\n";
     std::cout << "  a. agregar amigo\n";
     std::cout << "  b. solicitudes pendientes\n";
+    std::cout << "  c. ver mis amigos\n";
     std::cout << "  s. volver\n";
     char op[8];
     leerTexto("> ", op, 8);
@@ -200,6 +186,36 @@ void opcionAmigos(RedSocial & red) {
         char nombre[64];
         leerTexto("a quien le envias la solicitud? ", nombre, 64);
         decir(red.enviarSolicitud(nombre));
+        cerrarFuncionalidad(red);
+        return;
+    }
+    if (op[0] == 'c' || op[0] == 'C') {
+        red.iniciarMedicion(FUNC_LISTAR_AMIGOS);
+        unsigned int capacidad = red.getNumUsuarios();
+        if (capacidad == 0) {
+            std::cout << "no tienes amigos\n";
+            cerrarFuncionalidad(red);
+            return;
+        }
+        unsigned int * indices = new (std::nothrow) unsigned int[capacidad];
+        if (indices == nullptr) {
+            std::cout << "no hubo memoria para listar amigos\n";
+            cerrarFuncionalidad(red);
+            return;
+        }
+        MedidorRecursos::sumarMemoriaLocal(capacidad * sizeof(unsigned int));
+        unsigned int n = red.listarAmigos(indices, capacidad);
+        if (n == 0) {
+            std::cout << "no tienes amigos\n";
+        } else {
+            std::cout << "tus amigos (" << n << "):\n";
+            for (unsigned int i = 0; i < n; i++) {
+                Usuario * amigo = red.getUsuario(indices[i]);
+                std::cout << "  " << (i + 1) << ". "
+                          << (amigo == nullptr ? "?" : amigo->getNombreUsuario()) << "\n";
+            }
+        }
+        delete[] indices;
         cerrarFuncionalidad(red);
         return;
     }
@@ -446,13 +462,17 @@ void opcionActualizarFotos(RedSocial & red) {
     cerrarFuncionalidad(red);
 }
 
-void ejecutarSesion(RedSocial & red) {
+bool ejecutarSesion(RedSocial & red) {
     bool seguir = true;
+    bool otroUsuario = false;
     while (seguir && !entradaCerrada) {
         mostrarPantallaInicio(red);
         char op[8];
         leerTexto("> ", op, 8);
         if (op[0] == 's' || op[0] == 'S') {
+            seguir = false;
+        } else if (op[0] == 'c' || op[0] == 'C') {
+            otroUsuario = true;
             seguir = false;
         } else if (op[0] == '1') {
             opcionAmigos(red);
@@ -471,4 +491,8 @@ void ejecutarSesion(RedSocial & red) {
     red.cerrarSesion();
     std::cout << "\nresumen de la sesion\n";
     red.mostrarResumenSesion();
+    if (otroUsuario) {
+        std::cout << "\ningresa con otro usuario\n";
+    }
+    return otroUsuario;
 }

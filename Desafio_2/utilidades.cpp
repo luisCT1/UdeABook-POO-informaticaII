@@ -111,7 +111,7 @@ const char * descripcionResultado(unsigned short codigoResultado) {
     case RES_NO_HAY_SOLICITUD:      return "No hay una solicitud pendiente de ese usuario.";
     case RES_ERROR_MEMORIA:         return "No hay memoria suficiente para completar la operacion.";
     case RES_ERROR_ARCHIVO:         return "Fallo al leer o escribir un archivo de datos.";
-    case RES_YA_ACTUALIZO:          return "Ya uso el cambio de fotos: solo se permite una vez.";
+    case RES_YA_ACTUALIZO:          return "No se pudo actualizar el grupo de fotos.";
     case RES_CONTRASENA_INCORRECTA: return "La contrasena no es correcta.";
     case RES_SIN_CANDIDATOS:        return "No hay amigos distintos para mostrar otro grupo de fotos.";
     default:                        return "Resultado desconocido.";

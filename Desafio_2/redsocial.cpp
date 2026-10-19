@@ -46,7 +46,7 @@ FechaHora ahoraLocal() {
 
 RedSocial::RedSocial(const char * rutaDatos, const char * subRutaFija)
     : amistades(nullptr), gestor(nullptr), medidor(nullptr), usuarioActivo(nullptr),
-      grupoFotos(nullptr), cantidadGrupo(0), fotosActualizadas(false), valido(true) {
+      grupoFotos(nullptr), cantidadGrupo(0), valido(true) {
     medidor = new (std::nothrow) MedidorRecursos();
     gestor = new (std::nothrow) GestorArchivos(rutaDatos, subRutaFija);
     grupoFotos = reservar<unsigned int>(TAM_GRUPO_FOTOS);
@@ -181,7 +181,6 @@ unsigned short RedSocial::iniciarSesion(const char * nombre, const char * contra
         return RES_CONTRASENA_INCORRECTA;
     }
     usuarioActivo = u;
-    fotosActualizadas = false;
     cantidadGrupo = 0;
     iniciarFotosAmigos();
     MedidorRecursos::sumarMemoriaLocal(sizeof(u)
@@ -193,7 +192,6 @@ unsigned short RedSocial::iniciarSesion(const char * nombre, const char * contra
 void RedSocial::cerrarSesion() {
     usuarioActivo = nullptr;
     cantidadGrupo = 0;
-    fotosActualizadas = false;
 }
 
 bool RedSocial::iniciarFotosAmigos() {
@@ -209,9 +207,7 @@ unsigned short RedSocial::actualizarFotosAmigos() {
     if (usuarioActivo == nullptr || amistades == nullptr || grupoFotos == nullptr) {
         return RES_SIN_SESION;
     }
-    if (fotosActualizadas) {
-        return RES_YA_ACTUALIZO;
-    }
+    //se puede refrescar las veces que quiera; solo se excluye el grupo que esta en pantalla
     unsigned int nuevos[TAM_GRUPO_FOTOS];
     unsigned short cuantos = amistades->sortearAmigos(usuarioActivo->getIndice(), TAM_GRUPO_FOTOS,
                                                       grupoFotos, cantidadGrupo, nuevos);
@@ -224,7 +220,6 @@ unsigned short RedSocial::actualizarFotosAmigos() {
     MedidorRecursos::sumarIteraciones(cuantos);
     MedidorRecursos::sumarMemoriaLocal(sizeof(nuevos) + sizeof(cuantos));
     cantidadGrupo = cuantos;
-    fotosActualizadas = true;
     return RES_OK;
 }
 
@@ -256,6 +251,13 @@ unsigned short RedSocial::enviarSolicitud(const char * nombreDestino) {
         return RES_ERROR_ARCHIVO;
     }
     return RES_OK;
+}
+
+unsigned int RedSocial::listarAmigos(unsigned int * indices, unsigned int capacidad) const {
+    if (usuarioActivo == nullptr || amistades == nullptr || indices == nullptr) {
+        return 0;
+    }
+    return amistades->obtenerAmigos(usuarioActivo->getIndice(), indices, capacidad);
 }
 
 unsigned int RedSocial::listarSolicitudes(unsigned int * emisores, unsigned int capacidad) const {

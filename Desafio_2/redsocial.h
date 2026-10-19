@@ -22,7 +22,6 @@ private:
     Usuario * usuarioActivo;
     unsigned int * grupoFotos;
     unsigned short cantidadGrupo;
-    bool fotosActualizadas;
     bool valido;
 
 public:
@@ -55,6 +54,7 @@ public:
     Usuario * getAmigoDestacado(unsigned short posicion) const;
 
     unsigned short enviarSolicitud(const char * nombreDestino);
+    unsigned int listarAmigos(unsigned int * indices, unsigned int capacidad) const;
     unsigned int listarSolicitudes(unsigned int * emisores, unsigned int capacidad) const;
     unsigned short aceptarSolicitud(unsigned int indiceEmisor);
     unsigned short sugerirAmigos(unsigned short k, unsigned int * indices, unsigned int * comunes) const;
